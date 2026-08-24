@@ -1,0 +1,5 @@
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-weight:400}
+h1,h2,h3,blockquote,h1 i,h2 i,h3 i,blockquote i{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-weight:700;font-style:normal;letter-spacing:-.035em}
+.brand em{font-family:inherit;font-weight:700;font-style:normal}
+.button,.search-tab{font-family:inherit;font-weight:600}
+.package-footer strong,.activity-price,.stat-row strong,.modal-meta strong{font-family:inherit;font-weight:700;font-style:normal}

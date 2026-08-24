@@ -1,0 +1,6 @@
+.hero,.activities-hero{position:relative;background-blend-mode:normal}
+.feature-card,.activity-card-image,.split-image{position:relative;overflow:hidden}
+.feature-card::after,.activity-card-image::after,.split-image::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,25,23,.08) 0%,rgba(8,25,23,.28) 48%,rgba(8,25,23,.72) 100%);pointer-events:none;z-index:1}
+.feature-overlay,.activity-category{z-index:2}
+.feature-overlay{background:linear-gradient(0deg,rgba(5,23,21,.78),rgba(5,23,21,.08) 72%)}
+.activity-category{box-shadow:0 4px 14px rgba(4,20,18,.18)}
