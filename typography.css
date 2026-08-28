@@ -3,3 +3,4 @@ h1,h2,h3,blockquote,h1 i,h2 i,h3 i,blockquote i{font-family:-apple-system,BlinkM
 .brand em{font-family:inherit;font-weight:700;font-style:normal}
 .button,.search-tab{font-family:inherit;font-weight:600}
 .package-footer strong,.activity-price,.stat-row strong,.modal-meta strong{font-family:inherit;font-weight:700;font-style:normal}
+.brand em,h1 i,h2 i,h3 i,blockquote i{font-family:inherit;font-style:normal;font-weight:700;letter-spacing:0}.package-footer strong,.activity-price,.stat-row strong,.modal-meta strong{font-family:inherit}
