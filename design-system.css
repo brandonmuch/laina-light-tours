@@ -4379,3 +4379,12 @@ h2 { max-width: 34ch; }
   columns: auto !important;
 }
 .about-intro__body p { max-width: 54ch; }
+
+/* The client's own closing line carries more weight than the copy
+   above it. */
+.about-strap {
+  margin-top: var(--s-2) !important;
+  font-size: var(--t-md) !important;
+  font-weight: 600;
+  color: var(--ink) !important;
+}
