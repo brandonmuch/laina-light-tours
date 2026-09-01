@@ -5019,3 +5019,46 @@ main > section,
 .activities-hero > * { margin: 0; max-width: 100%; }
 .activities-hero h1 { max-width: 20ch; }
 .activities-hero p { max-width: 52ch; }
+
+/* ============================================================
+   NO ACCENT RULES ON THE LEFT EDGE
+   A coloured bar down the side of a note or a card is decoration
+   standing in for hierarchy. Removed everywhere: the note reads as
+   a note through its background and its size, and the route cards
+   already read as cards.
+   ============================================================ */
+
+.pkg-note,
+.route-card,
+.itinerary-success,
+.home-transfer-price,
+.transfer-price,
+.about-hero::before,
+.transfer-cta,
+.build-cta,
+blockquote {
+  border-left: 0 !important;
+  padding-left: inherit;
+}
+
+.pkg-note {
+  border-left: 0 !important;
+  padding: var(--s-4) var(--s-5) !important;
+  background: var(--surface-2);
+  border-radius: var(--r-md);
+  color: var(--ink-3) !important;
+}
+@supports (corner-shape: squircle) { .pkg-note { corner-shape: squircle; } }
+
+.route-card { padding: var(--s-5) !important; }
+
+.itinerary-success {
+  border-left: 0 !important;
+  border: 1px solid #cfe4d2 !important;
+  padding: var(--s-4) var(--s-5) !important;
+}
+
+.home-transfer-price, .transfer-price {
+  border-left: 0 !important;
+  padding-left: 0 !important;
+}
