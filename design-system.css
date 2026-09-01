@@ -1591,3 +1591,168 @@ select:focus-visible, [tabindex]:focus-visible {
   .catalog-top { display: block; }
   .catalog-top .filter-row { margin-top: var(--s-4); }
 }
+
+/* ============================================================
+   FORM CONTROLS — inherit the site face
+   Browsers render <select>, <option> and date inputs in the system
+   UI font unless told otherwise, which is why the dropdowns were
+   the only serif-ish, off-family text on the page.
+   ============================================================ */
+
+select, option, optgroup,
+input, textarea, button,
+input[type="date"], input[type="time"], input[type="search"],
+input[type="number"], input[type="email"], input[type="tel"],
+::-webkit-datetime-edit, ::-webkit-datetime-edit-fields-wrapper,
+::-webkit-datetime-edit-text, ::-webkit-datetime-edit-month-field,
+::-webkit-datetime-edit-day-field, ::-webkit-datetime-edit-year-field {
+  font-family: 'Helvetica Neue', Helvetica, 'Nimbus Sans', 'Liberation Sans', Arial,
+               -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  font-size: inherit;
+}
+
+/* Native select arrow replaced with our own so the control matches
+   the rest of the field styling in every browser. */
+select {
+  -webkit-appearance: none;
+  appearance: none;
+  padding-right: 42px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' fill='none' stroke='%236a6a67' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  cursor: pointer;
+}
+
+/* ============================================================
+   BENEFIT ICONS — considerably larger
+   ============================================================ */
+
+.benefits-bar { gap: var(--s-7) var(--s-6); padding-block: var(--s-8); }
+
+.benefit { gap: var(--s-4); align-items: flex-start; }
+
+.benefit-icon {
+  width: 56px;
+  height: 56px;
+  font-size: 52px;
+  color: var(--petrol);
+  background: none;
+  border: 0;
+}
+.benefit-icon .icon { stroke-width: 1.4; }
+
+.benefit strong { font-size: var(--t-md); margin-bottom: 5px; }
+.benefit span { font-size: var(--t-sm); line-height: 1.5; }
+
+@media (max-width: 560px) {
+  .benefit-icon { width: 46px; height: 46px; font-size: 42px; }
+}
+
+/* ============================================================
+   CREDENTIALS BAR
+   Every claim here is attributable. No invented awards.
+   ============================================================ */
+
+.credentials {
+  max-width: var(--shell);
+  margin: 0 auto var(--s-10);
+  padding: var(--s-7) clamp(20px,4vw,40px);
+  border-top: 1px solid var(--line-soft);
+  border-bottom: 1px solid var(--line-soft);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--s-6);
+}
+
+.credential { display: grid; gap: 6px; align-content: start; }
+.credential strong {
+  font-size: clamp(24px, 2.6vw, 32px);
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -.02em;
+  line-height: 1.1;
+}
+.credential span { font-size: var(--t-sm); font-weight: 600; color: var(--ink); }
+.credential small { font-size: var(--t-micro); color: var(--ink-3); line-height: 1.5; }
+
+@media (max-width: 900px) { .credentials { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 520px) { .credentials { grid-template-columns: 1fr; gap: var(--s-5); } }
+
+/* ============================================================
+   GROUP ENQUIRY PANEL — transfers page
+   ============================================================ */
+
+.group-enquiry {
+  max-width: var(--shell);
+  margin: 0 auto var(--s-10);
+  padding: clamp(28px,4vw,48px);
+  background: var(--surface-2);
+  border-radius: var(--r-lg);
+  display: grid;
+  grid-template-columns: 1.15fr auto;
+  gap: var(--s-6);
+  align-items: center;
+}
+@supports (corner-shape: squircle) { .group-enquiry { corner-shape: squircle; } }
+
+.group-enquiry h2 { font-size: var(--t-xl); margin: 0 0 var(--s-2); }
+.group-enquiry p { margin: 0; max-width: 54ch; }
+.group-enquiry ul {
+  margin: var(--s-4) 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-5);
+}
+.group-enquiry li {
+  display: flex; align-items: center; gap: 7px;
+  font-size: var(--t-sm); color: var(--ink-2);
+}
+.group-enquiry li .icon { font-size: 15px; color: var(--petrol); flex: none; }
+
+@media (max-width: 780px) {
+  .group-enquiry { grid-template-columns: 1fr; margin-inline: 20px; }
+}
+
+/* The mobile header assigns an explicit order to brand, CTA, toggle
+   and nav. .header-cart had none, so it defaulted to order:0 and
+   jumped ahead of the logo. */
+@media (max-width: 900px) {
+  .header-cart { order: 2; }
+  .header-cta  { order: 3; }
+  .menu-toggle { order: 4; }
+  .main-nav    { order: 5; }
+}
+
+/* ============================================================
+   .benefit span also matches .benefit-icon, which is a <span>,
+   and at (0,1,1) it outranked the (0,1,0) .benefit-icon rule —
+   which is why the icons kept rendering at label size. Scope the
+   label rule to the text column and raise the icon's specificity.
+   ============================================================ */
+
+.benefit > div > span { font-size: var(--t-sm); color: var(--ink-3); letter-spacing: normal; }
+
+.benefit .benefit-icon,
+.benefits-bar .benefit .benefit-icon {
+  width: 56px;
+  height: 56px;
+  flex: 0 0 56px;
+  font-size: 52px;
+  line-height: 1;
+  display: inline-grid;
+  place-items: center;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  color: var(--petrol);
+}
+.benefit .benefit-icon .icon { width: 1em; height: 1em; stroke-width: 1.4; }
+
+@media (max-width: 560px) {
+  .benefit .benefit-icon,
+  .benefits-bar .benefit .benefit-icon {
+    width: 46px; height: 46px; flex-basis: 46px; font-size: 42px;
+  }
+}
