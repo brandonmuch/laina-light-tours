@@ -418,18 +418,12 @@ document.querySelectorAll('.newsletter-form').forEach(form =>
 /* ── Mobile nav ──────────────────────────────────────────────────── */
 document.querySelectorAll('.menu-toggle').forEach(btn =>
   btn.addEventListener('click', () => {
-    const nav    = document.querySelector('.main-nav');
-    const isOpen = nav.style.display === 'flex';
-    nav.style.display     = isOpen ? 'none' : 'flex';
-    nav.style.position    = 'absolute';
-    nav.style.top         = '70px';
-    nav.style.left        = '0';
-    nav.style.right       = '0';
-    nav.style.padding     = '20px 25px';
-    nav.style.background  = 'var(--cream)';
-    nav.style.flexDirection = 'column';
-    nav.style.gap         = '18px';
-    document.querySelector('.site-header')?.classList.toggle('menu-open', !isOpen);
+    const nav = document.querySelector('.main-nav');
+    if (!nav) return;
+    const open = nav.classList.toggle('is-open');
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    /* clear any inline styles left by the previous implementation */
+    nav.removeAttribute('style');
   })
 );
 

@@ -336,7 +336,7 @@ input[type="date"], input[type="number"], select, textarea { border-radius: var(
 
 
 /* card-treatment.css already overlays these; no second layer. */
-.feature-overlay { position: relative; z-index: 2; padding: var(--s-5); }
+.feature-overlay { z-index: 2; padding: var(--s-5); }
 .feature-overlay h3 { color: #fff; }
 
 /* ============================================================
@@ -932,7 +932,7 @@ select:focus-visible, [tabindex]:focus-visible {
 }
 .feature-card:hover::after { background: rgba(18,18,16,.30); }
 
-.feature-overlay { position: relative; z-index: 2; }
+.feature-overlay { z-index: 2; }
 
 .feature-overlay h3,
 .feature-overlay h3 i {
@@ -2602,3 +2602,90 @@ h2 { max-width: 24ch; }
 .section-heading h2 { max-width: 26ch; }
 .route-card h3, .pkg-card h2, .package-card h3,
 .feature-overlay h3, .modal-card h2 { max-width: 100%; }
+
+
+/* ============================================================
+   FEATURE CARDS
+   The only real bug was two leftover rules setting
+   .feature-overlay to position:relative, which pushed the caption
+   to exactly the card's bottom edge where overflow:hidden clipped
+   it away on narrow screens. styles.css already had this right:
+   absolute, filling the card, copy bottom-aligned. Restated here
+   so nothing knocks it out again. Desktop is unchanged.
+   ============================================================ */
+
+.feature-card { position: relative; isolation: isolate; }
+
+.feature-card .feature-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: var(--s-2);
+  padding: var(--s-5);
+  color: #fff;
+}
+.feature-card .feature-overlay h3,
+.feature-card .feature-overlay h3 i { color: #fff; margin: 0; }
+.feature-card .circle-arrow { position: absolute; right: var(--s-5); bottom: var(--s-5); z-index: 4; }
+
+/* The card needs enough height for the caption to sit inside it. */
+@media (max-width: 760px) {
+  .feature-card { min-height: 300px; }
+  .feature-card .feature-overlay { padding: var(--s-4); }
+  .feature-card .circle-arrow { right: var(--s-4); bottom: var(--s-4); }
+}
+
+/* ============================================================
+   NAV BREAKPOINT
+   The hamburger was being shown from 900px while the legacy rules
+   only hid the inline nav lower down, so both appeared at once and
+   the brand wrapped to three lines. One breakpoint governs both.
+   ============================================================ */
+
+@media (max-width: 980px) {
+  .site-header .main-nav {
+    display: none !important;
+  }
+  .site-header .main-nav.is-open {
+    display: flex !important;
+    position: absolute;
+    top: 100%;
+    left: 0; right: 0;
+    flex-direction: column;
+    gap: 0;
+    padding: var(--s-3) clamp(16px,5vw,40px) var(--s-5);
+    background: var(--surface);
+    border-bottom: 1px solid var(--line-soft);
+    box-shadow: var(--e-2);
+    z-index: 60;
+  }
+  .site-header .main-nav.is-open a {
+    padding: 13px 0;
+    font-size: var(--t-base);
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .site-header .main-nav.is-open a:last-child { border-bottom: 0; }
+  .menu-toggle { display: inline-grid !important; }
+  .site-header { position: fixed; }
+}
+
+@media (min-width: 981px) {
+  .menu-toggle { display: none !important; }
+  .site-header .main-nav { display: flex !important; }
+}
+
+/* Brand never wraps. */
+.brand span { white-space: nowrap; }
+.brand { flex: 0 0 auto; min-width: 0; }
+
+/* ============================================================
+   ITINERARY BUILDER — legible on the blue
+   ============================================================ */
+
+.itinerary-guide #itinerary-list,
+.customizer-section #itinerary-list { color: rgba(255,255,255,.85) !important; }
+.customizer-section .customizer-option small { color: rgba(255,255,255,.78) !important; }
