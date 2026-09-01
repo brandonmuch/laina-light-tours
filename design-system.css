@@ -5062,3 +5062,36 @@ blockquote {
   border-left: 0 !important;
   padding-left: 0 !important;
 }
+
+/* ============================================================
+   PANEL EDGES — same inset as every grid
+   The rounded panels were spanning the full viewport while the
+   grids beside them sat at the gutter, so a card row and the panel
+   below it started on different lines. This width formula gives a
+   panel the same left edge as a grid at any viewport: it takes the
+   gutter when the page is narrow, and the shell when it is wide.
+   ============================================================ */
+
+.build-cta, .contact-section, .talk-card, .credentials, .benefits-bar,
+.pkg-cta, .catalog-cta, .group-enquiry, .transfer-cta, .home-transfers,
+.booking-wrap, .about-cta, .quote-section, .itinerary-panel {
+  width: min(
+    calc(var(--shell-box) - (var(--gutter) * 2)),
+    calc(100% - (var(--gutter) * 2))
+  ) !important;
+  max-width: none !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: clamp(20px, 3vw, 40px) !important;
+  padding-right: clamp(20px, 3vw, 40px) !important;
+  box-sizing: border-box;
+}
+
+/* Sections that only hold a grid keep the gutter as padding, so
+   their contents land on the same line as the panels above. */
+.packages-section, .discover, .catalog, .pkg-grid-section,
+.routes-section, .fleet-section, .transfer-features, .about-intro,
+.about-values, .about-image, .transfer-intro, .split-section {
+  padding-left: var(--gutter) !important;
+  padding-right: var(--gutter) !important;
+}
