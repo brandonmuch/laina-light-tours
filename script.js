@@ -1,3 +1,5 @@
+document.documentElement.classList.add('js');
+
 /* ============================================================
    SITE CONFIG — single source of truth for contact details.
    TODO: replace the two placeholder values below with the real

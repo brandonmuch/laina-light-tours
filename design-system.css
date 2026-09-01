@@ -5340,3 +5340,91 @@ input[type="checkbox"], input[type="radio"] {
     font-weight: 700;
   }
 }
+
+/* ============================================================
+   NOTHING MAY BE PERMANENTLY HIDDEN
+   motion.css hides a fixed list of sections at opacity 0 and only
+   restores them when .is-visible is added. When the reveal observer
+   was rewritten to watch [data-reveal], those sections stopped
+   being observed and never came back: the packages row and the
+   split section were invisible on every load.
+
+   The reveal is an enhancement. Only [data-reveal] may start
+   hidden, and even that is undone if the observer never runs.
+   ============================================================ */
+
+.benefits-bar, .packages-section, .discover, .split-section,
+.quote-section, .customizer-section, .about-intro, .about-image,
+.about-values, .about-cta, .transfer-intro, .transfer-features,
+.routes-section, .transfers-cta, .itinerary-hero, .itinerary-builder,
+.catalog-cta, .route-card, .values-grid article {
+  opacity: 1 !important;
+  transform: none !important;
+  animation: none !important;
+}
+
+/* The reveal now lives entirely on [data-reveal], and only while
+   the observer is alive to undo it. */
+@media (prefers-reduced-motion: no-preference) {
+  html.js [data-reveal]:not(.is-visible) { opacity: 0; transform: translateY(12px); }
+}
+[data-reveal].is-visible { opacity: 1 !important; transform: none !important; }
+
+/* ============================================================
+   TRANSFERS HERO PRICE — follow the site gutter
+   It was sitting hard against the left edge of the photograph
+   rather than lining up with everything else on the page.
+   ============================================================ */
+
+.transfers-hero {
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--s-5);
+}
+.transfers-hero > * {
+  width: 100%;
+  max-width: var(--shell-box);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  box-sizing: border-box;
+}
+.transfer-price { align-items: flex-start; }
+
+@media (min-width: 861px) {
+  .transfers-hero { flex-direction: row; align-items: center; justify-content: space-between; }
+  .transfers-hero > * { width: auto; margin-inline: 0; padding-inline: 0; }
+  .transfers-hero {
+    width: min(calc(var(--shell-box) - (var(--gutter) * 2)), calc(100% - (var(--gutter) * 2)));
+    margin-inline: auto;
+    padding-inline: 0 !important;
+    max-width: none !important;
+  }
+}
+
+/* ============================================================
+   REVEAL CANNOT HIDE CONTENT
+   This mechanism has now twice left real content invisible: once
+   when the observer stopped watching a class list, and again when a
+   legacy rule hid sections that the new observer never touched.
+   A decorative fade is not worth that risk.
+
+   Content is always painted. The reveal is a transform only, so the
+   worst case if the observer never runs is that a card sits 10px
+   low, fully readable, rather than not being there at all.
+   ============================================================ */
+
+[data-reveal] { opacity: 1 !important; }
+
+@media (prefers-reduced-motion: no-preference) {
+  html.js [data-reveal]:not(.is-visible) {
+    transform: translateY(10px);
+    transition: transform var(--dur-reveal) var(--ease-out);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+  html.js [data-reveal].is-visible { transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] { transform: none !important; transition: none !important; }
+}
