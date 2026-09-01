@@ -5095,3 +5095,248 @@ blockquote {
   padding-left: var(--gutter) !important;
   padding-right: var(--gutter) !important;
 }
+
+/* ============================================================
+   FORM CONTROLS — never wider than their container
+   Inputs carry an intrinsic width from their `size` attribute, and
+   grid and flex children default to min-width:auto, so on a narrow
+   screen a field refuses to shrink and pushes out of its card. This
+   is the fix, applied to every field on the site rather than the
+   one panel it was noticed on.
+   ============================================================ */
+
+input, select, textarea, button {
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.itinerary-form input,
+.itinerary-form select,
+.booking-form input,
+.booking-form select,
+.transfer-route input,
+.transfer-route select,
+.selected-when input,
+.selected-when select,
+.search-box input {
+  width: 100%;
+  display: block;
+}
+
+/* Any grid or flex parent that holds a field must be allowed to
+   shrink below its content width. */
+.itinerary-form label,
+.booking-form label,
+.date-fields, .traveller-fields, .transfer-route,
+.selected-when, .selected-body, .selected-item,
+.itinerary-panel, .booking-wrap, .filter-row,
+.transfer-toggle, .transfer-leg, .leg-body { min-width: 0; }
+
+.date-fields > *, .traveller-fields > *, .transfer-route > *,
+.selected-when > *, .filter-row > * { min-width: 0; }
+
+/* Number fields: keep the spinner from crowding the value on small
+   screens, and stop iOS zooming in on focus by holding 16px. */
+input[type="number"] { -moz-appearance: textfield; }
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button { margin-left: 4px; }
+
+@media (max-width: 640px) {
+  input, select, textarea { font-size: 16px !important; }
+  .date-fields, .traveller-fields, .transfer-route, .selected-when {
+    grid-template-columns: 1fr !important;
+    gap: var(--s-3) !important;
+  }
+  .itinerary-panel { padding: var(--s-4) !important; }
+}
+
+.traveller-note { margin-top: var(--s-3); font-size: var(--t-sm); color: var(--ink-3); }
+
+/* ============================================================
+   SELECTED EXPERIENCE — blue once it is in the itinerary
+   ============================================================ */
+
+.selected-item {
+  background: var(--petrol) !important;
+  border-color: var(--petrol) !important;
+  color: #fff !important;
+}
+.selected-item strong,
+.selected-item .selected-index,
+.selected-item small,
+.selected-item .item-qty,
+.selected-item label > span { color: #fff !important; }
+.selected-item small,
+.selected-item label > span { color: rgba(255,255,255,.78) !important; }
+.selected-item .item-qty { color: #f2b64a !important; }
+
+.selected-item .selected-remove {
+  background: rgba(255,255,255,.12);
+  border-color: rgba(255,255,255,.35);
+  color: #fff;
+}
+.selected-item .selected-remove:hover { background: rgba(255,255,255,.22); border-color: #fff; }
+
+/* The fields inside stay light so they read as inputs, not panel. */
+.selected-item input,
+.selected-item select {
+  background: #fff !important;
+  color: var(--ink) !important;
+  border-color: rgba(255,255,255,.4) !important;
+}
+
+/* A leg that is chosen takes the same treatment. */
+.transfer-leg input:checked + .leg-body {
+  background: var(--petrol) !important;
+  border-color: var(--petrol) !important;
+}
+.transfer-leg input:checked + .leg-body strong,
+.transfer-leg input:checked + .leg-body .leg-price { color: #fff !important; }
+.transfer-leg input:checked + .leg-body small { color: rgba(255,255,255,.8) !important; }
+.transfer-leg input:checked + .leg-body .icon { color: #f2b64a !important; }
+
+/* The transfer-leg checkboxes are visually hidden behind their
+   label; they must not be stretched by the full-width field rule. */
+.transfer-leg input[type="checkbox"],
+input[type="checkbox"], input[type="radio"] {
+  width: auto !important;
+  display: inline-block;
+  max-width: none;
+}
+.transfer-leg input[type="checkbox"] {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  opacity: 0;
+  pointer-events: none;
+  margin: 0;
+}
+.customizer-option input[type="checkbox"] { width: 18px !important; height: 18px !important; }
+
+/* ============================================================
+   WHERE AM I
+   The nav marks the current page, and the pages that have no nav
+   item of their own carry a breadcrumb instead.
+   ============================================================ */
+
+.main-nav a[aria-current="page"],
+.main-nav a.active {
+  color: var(--ink) !important;
+  border-bottom: 2px solid var(--petrol);
+  padding-bottom: 6px;
+}
+
+.page-crumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: min(calc(var(--shell-box) - (var(--gutter) * 2)), calc(100% - (var(--gutter) * 2)));
+  margin: calc(var(--s-7) + 82px) auto calc(var(--s-5) * -1);
+  font-size: var(--t-sm);
+  color: var(--ink-3);
+}
+.page-crumb a { color: var(--ink-2); text-decoration: none; }
+.page-crumb a:hover { color: var(--petrol); text-decoration: underline; }
+.page-crumb .icon { width: 14px; height: 14px; font-size: 14px; color: var(--ink-3); }
+.page-crumb [aria-current] { color: var(--ink); font-weight: 600; }
+
+/* The pages that carry a breadcrumb no longer need the tall header
+   offset baked into their own top padding. */
+.page-crumb + main .itinerary-main,
+.page-crumb + main .legal-page { padding-top: var(--s-5); }
+
+@media (max-width: 640px) {
+  .page-crumb { margin-top: calc(var(--s-6) + 70px); font-size: var(--t-micro); }
+}
+
+/* ============================================================
+   MOBILE: FIELDS INSIDE THEIR CARD, COUNTER CLEAR OF THE PRICE
+   Two separate faults, both only visible on a narrow screen:
+   the booking fields were escaping the card's right edge, and the
+   activity counter was being stretched across the price row and
+   sitting on top of it.
+   ============================================================ */
+
+/* -- Booking form ------------------------------------------- */
+.booking-wrap { overflow: hidden; }
+.booking-form {
+  display: grid;
+  gap: var(--s-4);
+  width: 100%;
+  min-width: 0;
+}
+.booking-form label { display: grid; gap: 6px; width: 100%; min-width: 0; }
+.booking-form input,
+.booking-form select {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box;
+}
+@media (max-width: 760px) {
+  .booking-form { grid-template-columns: 1fr !important; }
+  .booking-form > * { grid-column: 1 / -1 !important; }
+}
+
+/* -- Activity card footer ----------------------------------- */
+/* The details block is absolutely positioned, so if its content is
+   taller than the card the rows collapse onto each other. Give the
+   card room and let the block scroll its own overflow rather than
+   painting over itself. */
+.activity-card { min-height: 440px; }
+
+.activity-card .activity-details {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 8px;
+  overflow: hidden;
+}
+
+.activity-card .activity-bottom {
+  display: grid !important;
+  grid-template-columns: 1fr auto;
+  grid-template-areas: "price qty" "meta qty";
+  align-items: center;
+  column-gap: var(--s-3);
+  row-gap: 2px;
+}
+.activity-card .price-block       { grid-area: price; align-self: end; }
+.activity-card .activity-duration { grid-area: meta;  align-self: start; }
+.activity-card .qty-control       { grid-area: qty;   align-self: center; justify-self: end; }
+
+@media (max-width: 560px) {
+  .activity-card { min-height: 400px; }
+  .activity-card .activity-bottom {
+    grid-template-columns: 1fr;
+    grid-template-areas: "price" "meta" "qty";
+    row-gap: var(--s-3);
+    justify-items: stretch;
+  }
+  .activity-card .qty-control {
+    justify-self: stretch;
+    width: 100%;
+    justify-content: space-between;
+  }
+  .activity-card .price-block, .activity-card .activity-duration { justify-self: start; }
+  .activity-card .activity-details > p { -webkit-line-clamp: 2; }
+}
+
+/* The counter must never sit over the price. */
+.activity-card .qty-control { position: relative; z-index: 3; }
+.activity-card .price-block { position: relative; z-index: 2; }
+
+/* The itinerary is a destination in the menu as well as a button,
+   and it carries its own count so the menu shows the same state as
+   the header. */
+.main-nav a[href="itinerary.html"] { font-weight: 600; }
+
+@media (max-width: 980px) {
+  .site-header .main-nav.is-open a[href="itinerary.html"] {
+    color: var(--petrol) !important;
+    font-weight: 700;
+  }
+}
