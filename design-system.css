@@ -4103,3 +4103,20 @@ h2 { max-width: 34ch; }
 .activity-card > *, .activity-card img,
 .pick-card .pick-media img, .pkg-card .pkg-media img,
 .feature-card > *, .feature-card img { border-radius: 0 !important; }
+
+/* Three cards across on the home row. */
+.package-grid { grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 1000px) { .package-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px)  { .package-grid { grid-template-columns: 1fr; } }
+
+/* Long names wrap to three lines, so the title is clamped and the
+   copy takes what is left. The footer stays pinned regardless. */
+.package-card h3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: clamp(19px, 1.8vw, 24px) !important;
+}
+.package-card .package-copy { -webkit-line-clamp: 3; font-size: var(--t-sm) !important; }
+.package-card { min-height: 440px; }
