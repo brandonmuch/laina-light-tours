@@ -75,7 +75,7 @@ const activities = [
   ['Crocodile Farm','Culture','$40','—','A visit to a local crocodile farm.','More Images/Crocodile Farm.avif'],
   ['Meet the People Village Tour','Culture','$70','—','Local village and community experience.','Laina-Light-Tours-Activities-Images-Copilot/activities/meet-the-people-village-tour.jpeg'],
   ['Quad Bike','Adrenaline','$75','—','Explore the area by quad bike.','More Images/Quad bikes.jpg'],
-  ['Airport Transfer (one-way)','Transfers','$35','30–45 min','$35 per vehicle for up to 4 people.','Laina-Light-Tours-Activities-Images-Copilot/activities/airport-transfer.jpeg'],
+  ['Airport Transfer (one-way)','Transfers','$35','30–45 min','$35 per vehicle for up to 4 people.','images/vehicles/fleet-exterior-01.webp'],
   ['Flying Fox','Water','$76','—','Fly above the gorge on a high-speed zipline.','More Images/Flying fox victoria falls.webp'],
   ['Gorge Swing','Water','$140','—','A gorge swing above the Batoka Gorge.','Laina-Light-Tours-Activities-Images-Copilot/activities/bridge-swing-tandem.webp'],
   ['Tandem Gorge Swing','Water','$207','—','A tandem swing over the Batoka Gorge.','Laina-Light-Tours-Activities-Images-Copilot/activities/bridge-swing-tandem.webp'],

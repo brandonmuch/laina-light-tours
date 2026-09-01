@@ -4901,3 +4901,121 @@ main > section,
 
 /* If JavaScript never runs, nothing stays hidden. */
 .no-js [data-reveal] { opacity: 1 !important; transform: none !important; }
+
+/* ============================================================
+   IMAGE CARDS — bottom scrim, balanced, price aligned to counter
+   A fade from dark at the base to transparent at the top keeps the
+   copy readable wherever the photograph happens to be pale, without
+   dulling the whole image the way a flat tint does.
+   ============================================================ */
+
+.activity-card, .package-card, .feature-card {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  min-height: 420px;
+}
+
+.activity-card::after,
+.package-card::after,
+.feature-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    to top,
+    rgba(10,12,10,.92) 0%,
+    rgba(10,12,10,.78) 22%,
+    rgba(10,12,10,.42) 45%,
+    rgba(10,12,10,.10) 68%,
+    rgba(10,12,10,0)   100%
+  );
+}
+
+.activity-card .activity-details,
+.package-card .package-card-body,
+.feature-card .feature-overlay { z-index: 2; }
+
+/* Copy sits at the base of the card, so every card in a row ends on
+   the same line regardless of how long its title runs. */
+.activity-card .activity-details,
+.package-card .package-card-body {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: var(--s-5);
+}
+
+.activity-card .activity-details h3,
+.package-card h3 { margin: 0; }
+
+/* The chip stays pinned at the top while the copy sits at the base. */
+.activity-card .activity-category,
+.package-card .package-label {
+  position: absolute;
+  top: var(--s-4);
+  left: var(--s-4);
+  z-index: 3;
+}
+
+/* ── Price and counter on one baseline ─────────────────────── */
+
+.activity-card .activity-bottom,
+.package-card .package-footer {
+  display: flex !important;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--s-3);
+  flex-wrap: nowrap;
+  margin-top: 4px;
+  padding-top: var(--s-3);
+  border-top: 1px solid rgba(255,255,255,.30);
+}
+
+.activity-card .price-block,
+.package-card .price-block { flex: 1 1 auto; min-width: 0; }
+
+.activity-card .qty-control,
+.package-card .circle-arrow {
+  flex: none;
+  align-self: flex-end;
+  margin: 0;
+}
+
+/* Duration moves up beside the title so it never competes with the
+   counter for the bottom row. */
+.activity-card .activity-duration {
+  position: static;
+  order: -1;
+  align-self: flex-start;
+  font-size: var(--t-micro) !important;
+  color: rgba(255,255,255,.78) !important;
+}
+
+@media (max-width: 520px) {
+  .activity-card, .package-card, .feature-card { min-height: 380px; }
+  .activity-card .activity-details,
+  .package-card .package-card-body { padding: var(--s-4); }
+}
+
+/* ============================================================
+   ACTIVITIES HERO — one aligned stack
+   The eyebrow, headline and paragraph were sitting on three
+   different left edges.
+   ============================================================ */
+
+.activities-hero {
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: var(--s-3);
+}
+.activities-hero > * { margin: 0; max-width: 100%; }
+.activities-hero h1 { max-width: 20ch; }
+.activities-hero p { max-width: 52ch; }
