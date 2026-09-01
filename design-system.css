@@ -2829,3 +2829,167 @@ h2 { max-width: 24ch; }
 .feature-card:hover .circle-arrow { background: var(--amber) !important; }
 .package-card:hover .circle-arrow .icon,
 .feature-card:hover .circle-arrow .icon { stroke: var(--charcoal) !important; }
+
+/* ============================================================
+   BUILD YOUR ITINERARY — replaces the four checkboxes
+   Those boxes duplicated the catalogue and could only ever offer
+   four of the forty-six experiences. A single route into the
+   builder is clearer and does not compete with the cart.
+   ============================================================ */
+
+.build-cta {
+  max-width: var(--shell);
+  margin: 0 auto var(--s-10);
+  padding: clamp(32px,5vw,64px) clamp(24px,5vw,56px);
+  background: var(--petrol);
+  color: #fff;
+  border-radius: var(--r-xl);
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: clamp(32px,5vw,64px);
+  align-items: center;
+}
+@supports (corner-shape: squircle) { .build-cta { corner-shape: squircle; } }
+
+.build-copy h2 {
+  color: #fff;
+  font-size: clamp(30px,3.6vw,44px);
+  margin: var(--s-2) 0 var(--s-3);
+  max-width: 16ch;
+}
+.build-copy .eyebrow { color: #f2b64a; }
+.build-copy > p { color: rgba(255,255,255,.86); max-width: 52ch; margin: 0; }
+
+.build-steps {
+  list-style: none;
+  margin: var(--s-5) 0 0;
+  padding: 0;
+  display: grid;
+  gap: var(--s-3);
+}
+.build-steps li {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  font-size: var(--t-sm);
+  color: rgba(255,255,255,.92);
+}
+.build-steps .icon { font-size: 19px; color: #f2b64a; flex: none; }
+
+.build-actions {
+  display: grid;
+  gap: var(--s-3);
+  justify-items: stretch;
+  padding: var(--s-5);
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.22);
+  border-radius: var(--r-lg);
+}
+@supports (corner-shape: squircle) { .build-actions { corner-shape: squircle; } }
+
+.build-count {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0 0 var(--s-2);
+}
+.build-count strong {
+  font-size: 44px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+  letter-spacing: -.02em;
+}
+.build-count span { font-size: var(--t-sm); color: rgba(255,255,255,.78); }
+
+.build-actions .button { width: 100%; justify-content: center; }
+.build-actions .button-light { background: #f2b64a; color: var(--charcoal); }
+.build-actions .button-light:hover { background: #f7c76d; }
+.build-actions .button-light .icon { stroke: var(--charcoal); }
+
+.build-secondary {
+  background: transparent;
+  color: #fff;
+  border: 1.5px solid rgba(255,255,255,.6);
+}
+.build-secondary:hover { background: rgba(255,255,255,.12); color: #fff; border-color: #fff; }
+.build-secondary .btn-count { background: #f2b64a; color: var(--charcoal); }
+
+@media (max-width: 860px) {
+  .build-cta { grid-template-columns: 1fr; margin-inline: 20px; }
+}
+
+/* Grid and flex children default to min-width:auto, so long copy
+   refuses to shrink and pushes past its column. */
+.build-cta > *, .build-copy, .build-actions,
+.talk-band > *, .contact-section > *, .group-enquiry > *,
+.pkg-cta > *, .catalog-cta > *, .itinerary-submit > * { min-width: 0; }
+.build-copy > p, .build-copy h2 { max-width: 100%; }
+@media (min-width: 861px) {
+  .build-copy > p { max-width: 52ch; }
+  .build-copy h2 { max-width: 16ch; }
+}
+
+/* ============================================================
+   CARD LIFT
+   A soft, warm-tinted shadow on every card so they sit above the
+   page rather than sitting flat on it. Tinted to the background
+   hue, never pure black, and it deepens on hover.
+   ============================================================ */
+
+:root {
+  --lift-1: 0 1px 2px rgba(26,25,25,.05), 0 4px 12px rgba(26,25,25,.07);
+  --lift-2: 0 2px 4px rgba(26,25,25,.06), 0 10px 26px rgba(26,25,25,.11);
+  --lift-3: 0 3px 6px rgba(26,25,25,.07), 0 18px 40px rgba(26,25,25,.15);
+}
+
+.package-card,
+.activity-card,
+.pick-card,
+.pkg-card,
+.feature-card,
+.credential,
+.route-card,
+.transfer-features article,
+.fleet-media,
+.contact-method,
+.selected-item,
+.itinerary-panel,
+.modal-card,
+.talk-band,
+.build-actions,
+.transfer-price {
+  box-shadow: var(--lift-1) !important;
+  transition: box-shadow var(--dur-base) var(--ease-out),
+              transform var(--dur-base) var(--ease-out);
+}
+
+.package-card:hover,
+.activity-card:hover,
+.pick-card:hover,
+.pkg-card:hover,
+.feature-card:hover,
+.route-card:hover,
+.transfer-features article:hover,
+.contact-method:hover {
+  box-shadow: var(--lift-3) !important;
+  transform: translateY(-3px);
+}
+
+/* Panels that sit on the page rather than inside it get a touch more. */
+.build-cta, .contact-section, .group-enquiry, .pkg-cta, .catalog-cta,
+.booking-wrap, .benefits-bar {
+  box-shadow: var(--lift-2) !important;
+}
+.benefits-bar { border-radius: var(--r-lg); }
+
+/* Cards on a dark panel need a lighter touch or the shadow vanishes. */
+.credential, .route-card {
+  box-shadow: 0 2px 6px rgba(0,0,0,.18), 0 12px 28px rgba(0,0,0,.16) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .package-card:hover, .activity-card:hover, .pick-card:hover,
+  .pkg-card:hover, .feature-card:hover, .route-card:hover,
+  .transfer-features article:hover, .contact-method:hover { transform: none; }
+}

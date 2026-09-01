@@ -230,6 +230,9 @@ function updateItineraryNav() {
     el.hidden = total === 0;
   });
 
+  const homeCount = document.querySelector('#itinerary-count');
+  if (homeCount) homeCount.textContent = total;
+
   /* Buttons that change wording once something is selected. */
   document.querySelectorAll('[data-cart-label]').forEach(el => {
     el.textContent = total === 0
@@ -476,55 +479,9 @@ document.querySelectorAll('.search-tab').forEach(tab =>
   })
 );
 
-/* ── Customizer options ──────────────────────────────────────────── */
-const itineraryOptions = document.querySelectorAll('.customizer-option input');
-if (itineraryOptions.length) {
-
-  /* These checkboxes previously called setSelections with an object
-     built only from themselves, which replaced the whole cart and
-     silently discarded anything chosen on the activities page. They
-     now add and remove their own item and leave the rest alone. */
-  const syncFromStore = () => {
-    const sels = getSelections();
-    itineraryOptions.forEach(o => { o.checked = !!sels[o.value]; });
-    paint();
-  };
-
-  const paint = () => {
-    const sels  = getSelections();
-    const names = Object.keys(sels);
-    const total = names.reduce((acc, n) => acc + sels[n], 0);
-
-    const countEl = document.querySelector('#itinerary-count');
-    if (countEl) {
-      countEl.textContent = total
-        ? total + ' experience' + (total === 1 ? '' : 's') + ' selected'
-        : 'Nothing selected yet';
-    }
-
-    const listEl = document.querySelector('#itinerary-list');
-    if (listEl) {
-      listEl.textContent = names.length
-        ? names.map(n => sels[n] > 1 ? n + ' x' + sels[n] : n).join(' \u00b7 ')
-        : 'Tick an experience below, or browse the full catalogue.';
-    }
-  };
-
-  itineraryOptions.forEach(o =>
-    o.addEventListener('change', () => {
-      const sels = getSelections();
-      if (o.checked) {
-        sels[o.value] = sels[o.value] || 1;
-      } else {
-        delete sels[o.value];
-      }
-      setSelections(sels);
-      paint();
-    })
-  );
-
-  syncFromStore();
-}
+/* Customizer checkboxes removed: the home page now carries a
+   build-your-itinerary CTA instead, and #itinerary-count is fed
+   from updateItineraryNav like every other cart counter. */
 
 /* ── Itinerary page ──────────────────────────────────────── */
 const itineraryList = document.querySelector('#selected-list');
