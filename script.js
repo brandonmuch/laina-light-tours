@@ -515,16 +515,43 @@ if (siteHeader) {
 }
 
 /* ── Reveal on scroll ────────────────────────────────────────────── */
-const revealTargets = document.querySelectorAll(
-  '.benefits-bar,.packages-section,.discover,.split-section,.quote-section,.customizer-section,.about-intro,.about-image,.about-values,.about-cta,.transfer-intro,.transfer-features,.routes-section,.transfers-cta,.itinerary-hero,.itinerary-builder,.catalog-cta'
-);
-if (revealTargets.length && 'IntersectionObserver' in window) {
-  const revealObserver = new IntersectionObserver(entries =>
+/* Reveal on scroll.
+   Watches [data-reveal] so anything tagged later is picked up, and
+   staggers within a row so a grid resolves left to right rather
+   than all at once. If IntersectionObserver is unavailable, or JS
+   fails, the CSS leaves the content visible: the reveal is an
+   enhancement, never a gate on reading the page. */
+const revealTargets = document.querySelectorAll('[data-reveal]');
+
+if (!('IntersectionObserver' in window)) {
+  revealTargets.forEach(t => t.classList.add('is-visible'));
+} else if (revealTargets.length) {
+  const revealObserver = new IntersectionObserver(entries => {
     entries.forEach(entry => {
-      if (entry.isIntersecting) { entry.target.classList.add('is-visible'); revealObserver.unobserve(entry.target); }
-    }), { threshold: 0.12 }
-  );
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      /* Stagger only against siblings, capped so a long grid never
+         leaves the last card waiting. */
+      const sibs = el.parentElement ? [...el.parentElement.children].filter(c => c.hasAttribute('data-reveal')) : [];
+      const idx = Math.max(0, sibs.indexOf(el));
+      el.style.setProperty('--reveal-delay', Math.min(idx, 5) * 60 + 'ms');
+      el.classList.add('is-visible');
+      revealObserver.unobserve(el);
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
   revealTargets.forEach(t => revealObserver.observe(t));
+
+  /* Safety net: anything still hidden after load gets revealed, so a
+     mis-tagged element can never hide content permanently. */
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      document.querySelectorAll('[data-reveal]:not(.is-visible)').forEach(el => {
+        const r = el.getBoundingClientRect();
+        if (r.top < window.innerHeight) el.classList.add('is-visible');
+      });
+    }, 300);
+  });
 }
 
 /* ── Booking tabs ────────────────────────────────────────────────── */

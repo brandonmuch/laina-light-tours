@@ -4393,3 +4393,511 @@ h2 { max-width: 34ch; }
 .fleet-card-wide { grid-column: span 2; }
 @media (max-width: 900px) { .fleet-grid { grid-template-columns: repeat(2,1fr); } .fleet-card-wide { grid-column: span 2; } }
 @media (max-width: 560px) { .fleet-grid { grid-template-columns: 1fr; } .fleet-card-wide { grid-column: span 1; } }
+
+/* ============================================================
+   FLEET GRID — four real photographs
+   ============================================================ */
+
+.fleet-grid { grid-template-columns: repeat(3, 1fr); gap: var(--s-4); }
+.fleet-card-wide { grid-column: span 3; }
+.fleet-card-wide .fleet-media { aspect-ratio: 16 / 9; }
+.fleet-media { aspect-ratio: 3 / 2; box-shadow: var(--lift-1); }
+
+@media (max-width: 900px) {
+  .fleet-grid { grid-template-columns: repeat(2, 1fr); }
+  .fleet-card-wide { grid-column: span 2; }
+}
+@media (max-width: 560px) {
+  .fleet-grid { grid-template-columns: 1fr; }
+  .fleet-card-wide { grid-column: span 1; }
+}
+
+.fleet-section .section-heading { margin-bottom: var(--s-6); display: block; }
+.fleet-note {
+  margin-top: var(--s-5);
+  font-size: var(--t-sm);
+  color: var(--ink-3);
+  max-width: 70ch;
+}
+
+/* ============================================================
+   FOOTER PAYMENTS
+   The supported methods, on the light chips the logos were drawn
+   for. Each mark is a coloured logo on white, so they need a light
+   plate to sit on rather than the dark footer.
+   ============================================================ */
+
+.footer-payments {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  flex-wrap: wrap;
+  padding-top: var(--s-5);
+  margin-top: var(--s-4);
+  border-top: 1px solid rgba(255,255,255,.16);
+}
+
+.footer-payments__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: var(--t-sm) !important;
+  color: rgba(255,255,255,.72) !important;
+}
+.paynow-mark {
+  height: 20px;
+  width: auto;
+  background: #fff;
+  border-radius: 4px;
+  padding: 3px 6px;
+}
+
+.payment-logos {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.payment-logos li {
+  display: grid;
+  place-items: center;
+  height: 30px;
+  padding: 0 9px;
+  background: #fff;
+  border-radius: 5px;
+}
+.payment-logos img {
+  height: 16px;
+  width: auto;
+  max-width: 62px;
+  object-fit: contain;
+  display: block;
+}
+
+@media (max-width: 640px) {
+  .footer-payments { gap: var(--s-3); }
+  .payment-logos li { height: 26px; padding: 0 7px; }
+  .payment-logos img { height: 13px; }
+}
+
+/* ============================================================
+   FLEET — even 2 x 2 grid
+   A full-bleed lead image dominated the page and made the other
+   three read as afterthoughts. Four equal tiles instead, since
+   these are examples from a range rather than one hero vehicle.
+   ============================================================ */
+
+.fleet-grid {
+  grid-template-columns: repeat(2, 1fr) !important;
+  gap: var(--s-4) !important;
+  max-width: 980px;
+  margin-inline: auto;
+}
+.fleet-card, .fleet-card-wide { grid-column: auto !important; }
+.fleet-media, .fleet-card-wide .fleet-media { aspect-ratio: 3 / 2 !important; }
+
+@media (max-width: 620px) {
+  .fleet-grid { grid-template-columns: 1fr !important; }
+}
+
+/* ============================================================
+   PAYMENTS — grouped for two audiences
+   International visitors need to see Visa and Mastercard without
+   hunting; Zimbabwean visitors need the mobile money options. One
+   undifferentiated row served neither.
+   ============================================================ */
+
+.footer-payments { display: grid; gap: var(--s-4); align-items: start; }
+.payment-groups { display: flex; flex-wrap: wrap; gap: var(--s-6) var(--s-7); }
+.payment-group { display: grid; gap: 8px; }
+.payment-group__label {
+  font-size: var(--t-micro);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.55);
+}
+
+/* ============================================================
+   TRANSFERS HERO PRICE — text on the photograph, no white slab
+   The white card sat on the hero image like a sticker. The figure
+   reads perfectly well as light type over the picture.
+   ============================================================ */
+
+.transfer-price {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  color: #fff !important;
+  display: grid;
+  gap: 2px;
+  justify-items: start;
+}
+.transfer-price span,
+.transfer-price small {
+  color: rgba(255,255,255,.85) !important;
+  font-size: var(--t-sm) !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+  text-shadow: 0 1px 4px rgba(0,0,0,.5);
+}
+.transfer-price strong {
+  color: #fff !important;
+  font-size: clamp(44px, 5vw, 64px) !important;
+  line-height: 1 !important;
+  text-shadow: 0 2px 8px rgba(0,0,0,.45);
+}
+
+/* Hero CTA to the standard size. */
+.transfers-hero .button,
+.transfers-hero-copy .button {
+  height: 44px !important;
+  padding: 0 30px !important;
+  font-size: 16px !important;
+  width: auto !important;
+  align-self: flex-start;
+}
+
+/* ============================================================
+   FOOTER GRID
+   The columns were collapsing into one run at tablet width, so the
+   headings sat directly against the previous column's last link.
+   ============================================================ */
+
+.site-footer {
+  display: grid;
+  grid-template-columns: 1.4fr repeat(3, 1fr);
+  gap: var(--s-7) var(--s-6);
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .site-footer { grid-template-columns: 1fr 1fr; gap: var(--s-6) var(--s-5); }
+  .site-footer .footer-brand { grid-column: 1 / -1; }
+}
+@media (max-width: 560px) {
+  .site-footer { grid-template-columns: 1fr; gap: var(--s-5); }
+}
+
+.site-footer .footer-column { display: grid; gap: 10px; align-content: start; }
+.site-footer .footer-column h3 {
+  margin: 0 0 4px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255,255,255,.14);
+}
+
+/* ============================================================
+   PICK CARDS — no mid-sentence truncation
+   The copy was being clamped and cut with an ellipsis, which reads
+   as broken rather than concise. The copy is shorter and the clamp
+   is a safety net at three lines rather than a hard two.
+   ============================================================ */
+
+.pick-body p {
+  -webkit-line-clamp: 3;
+  font-size: var(--t-sm) !important;
+  line-height: 1.5;
+  color: var(--ink-2) !important;
+}
+
+.pick-incl {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 !important;
+  font-size: var(--t-micro) !important;
+  font-weight: 600;
+  color: var(--petrol) !important;
+  -webkit-line-clamp: none;
+  overflow: visible;
+}
+.pick-incl .icon { width: 14px; height: 14px; font-size: 14px; flex: none; }
+
+/* Titles wrap to two lines at most, so the rows stay even. */
+.pick-body h3 {
+  min-height: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.pick-body { gap: 8px; }
+
+/* ============================================================
+   PAGE GUTTER
+   Every contained section shares one left and right inset so the
+   content edges line up down the page. Sections that are meant to
+   be full bleed (the heroes and the image panels) opt out.
+   ============================================================ */
+
+:root { --gutter: clamp(20px, 5vw, 56px); }
+
+main > section,
+.credentials, .benefits-bar, .build-cta, .talk-card, .contact-section,
+.packages-section, .discover, .split-section, .booking-wrap,
+.pkg-hero, .pkg-grid-section, .pkg-cta, .catalog, .catalog-cta,
+.about-intro, .about-values, .about-image, .about-cta,
+.transfer-intro, .transfer-features, .routes-section, .fleet-section,
+.group-enquiry, .transfer-cta, .itinerary-main, .legal-page,
+.home-transfers, .activity-groups {
+  padding-left: var(--gutter);
+  padding-right: var(--gutter);
+  box-sizing: border-box;
+}
+
+/* Inner wrappers must not add a second inset on top of the gutter. */
+.credentials, .benefits-bar, .fleet-section, .transfer-features,
+.routes-section, .pkg-grid-section, .about-intro, .about-values,
+.about-image, .transfer-intro {
+  padding-inline: var(--gutter) !important;
+}
+
+/* Panels keep their own interior padding for the copy, but their
+   outer edge is the gutter, not an extra margin. */
+.build-cta, .contact-section, .talk-card, .group-enquiry,
+.pkg-cta, .catalog-cta, .about-cta, .transfer-cta, .home-transfers,
+.booking-wrap {
+  margin-left: auto !important;
+  margin-right: auto !important;
+  max-width: min(var(--shell), 100%);
+}
+
+/* Full bleed: the heroes and any section that carries a background
+   photograph edge to edge. */
+.hero, .about-hero, .activities-hero, .transfers-hero, .itinerary-hero {
+  padding-left: var(--gutter);
+  padding-right: var(--gutter);
+  margin-inline: 0;
+  max-width: none;
+}
+
+.site-header, .site-footer {
+  padding-left: var(--gutter) !important;
+  padding-right: var(--gutter) !important;
+}
+
+/* Content inside a gutter-ed section should not be re-indented. */
+.section-heading, .panel-head, .package-grid, .pick-grid,
+.activity-grid, .fleet-grid, .route-grid, .values-grid,
+.pkg-grid, .feature-grid { padding-inline: 0; }
+
+/* ============================================================
+   GUTTER — one formula for every section
+   Sections were mixing three approaches: shell-centring, a gutter,
+   and both together, so content edges landed at 56, 76, 136 and
+   216px on the same page. Every contained block now uses the same
+   box: full width, capped at the shell plus two gutters, centred,
+   with the gutter as padding. Content edges then agree by
+   construction at any viewport.
+   ============================================================ */
+
+:root { --shell-box: calc(var(--shell) + (var(--gutter) * 2)); }
+
+main > section,
+.credentials, .benefits-bar, .build-cta, .talk-card, .contact-section,
+.packages-section, .discover, .split-section, .booking-wrap,
+.pkg-hero, .pkg-grid-section, .pkg-cta, .catalog, .catalog-cta,
+.about-intro, .about-values, .about-image, .about-cta,
+.transfer-intro, .transfer-features, .routes-section, .fleet-section,
+.group-enquiry, .transfer-cta, .itinerary-main, .legal-page,
+.home-transfers, .transfer-features, .fleet-grid-wrap {
+  width: 100%;
+  max-width: var(--shell-box) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: var(--gutter) !important;
+  padding-right: var(--gutter) !important;
+  box-sizing: border-box;
+}
+
+/* Heroes keep a full-bleed background but constrain their copy to
+   the same box, so the headline starts on the same line as every
+   section below it. */
+.hero, .about-hero, .activities-hero, .transfers-hero {
+  max-width: none !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+.hero > *, .about-hero > *, .activities-hero > *, .transfers-hero > * {
+  width: 100%;
+  max-width: var(--shell-box);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--gutter);
+  padding-right: var(--gutter);
+  box-sizing: border-box;
+}
+.hero-copy, .transfers-hero-copy { max-width: var(--shell-box); }
+
+.site-header, .site-footer {
+  max-width: var(--shell-box) !important;
+  margin-inline: auto !important;
+  padding-left: var(--gutter) !important;
+  padding-right: var(--gutter) !important;
+}
+
+/* The panels already carry interior padding for their own copy;
+   that sits inside the gutter, it does not add to it. */
+.build-cta, .contact-section, .talk-card, .group-enquiry, .pkg-cta,
+.catalog-cta, .about-cta, .transfer-cta, .home-transfers, .booking-wrap,
+.credentials, .benefits-bar { margin-inline: auto !important; }
+
+/* Nested wrappers must not inset again. */
+.section-heading, .panel-head, .package-grid, .pick-grid, .fleet-note,
+.activity-grid, .activity-groups, .fleet-grid, .route-grid, .values-grid,
+.pkg-grid, .feature-grid, .pkg-note, .catalog-top {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  max-width: 100% !important;
+}
+
+/* ============================================================
+   MOTION
+   Built to the animate skill's rules rather than eyeballed:
+   transform and opacity only, ease-out on every entrance, nothing
+   over 300ms for UI, never scale(0), and the curves taken from the
+   skill's table rather than invented.
+
+   WCAG:
+   - 2.3.3 Animation from Interactions: every motion below is
+     removed under prefers-reduced-motion, not merely shortened.
+   - 2.2.2 Pause, Stop, Hide: nothing loops or autoplays beyond a
+     single entrance, so there is nothing to pause.
+   - 2.3.1 Three Flashes: no flashing, no rapid opacity cycling.
+   - Reveals never gate content: elements start visible to
+     assistive tech and to anyone with JS off.
+   ============================================================ */
+
+:root {
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-press: 120ms;
+  --dur-hover: 180ms;
+  --dur-enter: 260ms;
+  --dur-reveal: 500ms;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+
+  /* ── Scroll reveal ──────────────────────────────────────────
+     One entrance per element, opacity plus a short rise. Distance
+     is deliberately small: a long travel reads as decoration. */
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity var(--dur-reveal) var(--ease-out),
+                transform var(--dur-reveal) var(--ease-out);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+  [data-reveal].is-visible { opacity: 1; transform: none; }
+
+  /* ── Cards ──────────────────────────────────────────────────
+     Hover lifts; the shadow does the work, the movement is 3px. */
+  .package-card, .activity-card, .pick-card, .pkg-card,
+  .feature-card, .route-card, .contact-method, .credential,
+  .transfer-features article, .values-grid > * {
+    transition: transform var(--dur-hover) var(--ease-out),
+                box-shadow var(--dur-hover) var(--ease-out),
+                border-color var(--dur-hover) var(--ease-out),
+                background-color var(--dur-hover) var(--ease-out);
+  }
+
+  /* Image scale stays under the card's clip, slow enough to read
+     as depth rather than a zoom effect. */
+  .feature-card img, .package-image img, .pick-media img, .pkg-media img {
+    transition: transform 480ms var(--ease-out);
+  }
+
+  /* ── Buttons ────────────────────────────────────────────────
+     Press feedback is the fastest thing on the site; anything
+     slower feels like lag rather than response. */
+  .button, .header-cta, .header-cart, .qty-btn, .search-tab,
+  .text-link, .pick-cta, .talk-card__alt {
+    transition: transform var(--dur-press) var(--ease-out),
+                background-color var(--dur-hover) var(--ease-out),
+                color var(--dur-hover) var(--ease-out),
+                opacity var(--dur-press) var(--ease-out);
+  }
+  .button:active, .header-cta:active, .header-cart:active,
+  .qty-btn:active { transform: scale(0.97); }
+
+  /* ── Counter ────────────────────────────────────────────────
+     A single pulse confirms the value changed. Starts at 0.9, not
+     zero: nothing in the real world appears from nothing. */
+  .qty-control.is-active .qty-val { animation: count-pop 180ms var(--ease-out); }
+  @keyframes count-pop {
+    from { transform: scale(0.9); }
+    to   { transform: scale(1); }
+  }
+
+  /* ── Modal ──────────────────────────────────────────────────
+     Not anchored to a trigger, so it stays centred and does not
+     take a transform-origin. */
+  .modal { animation: fade-in 180ms var(--ease-out); }
+  .modal.open .modal-card { animation: modal-in var(--dur-enter) var(--ease-out); }
+  @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes modal-in {
+    from { opacity: 0; transform: translateY(8px) scale(0.98); }
+    to   { opacity: 1; transform: none; }
+  }
+  @media (max-width: 560px) {
+    .modal.open .modal-card { animation: sheet-in var(--dur-enter) var(--ease-out); }
+    @keyframes sheet-in {
+      from { transform: translateY(16px); opacity: 0; }
+      to   { transform: none; opacity: 1; }
+    }
+  }
+
+  /* ── Mobile menu ───────────────────────────────────────────── */
+  .site-header .main-nav.is-open { animation: menu-in 200ms var(--ease-out); }
+  @keyframes menu-in {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  /* ── Header ─────────────────────────────────────────────────
+     Colour and border only; the bar itself never moves. */
+  .site-header {
+    transition: background-color var(--dur-enter) var(--ease-out),
+                border-color var(--dur-enter) var(--ease-out);
+  }
+
+  /* ── Focus ──────────────────────────────────────────────────
+     The ring appears instantly. Never animate focus in: a keyboard
+     user should not wait to see where they are. */
+  a:focus-visible, button:focus-visible,
+  input:focus-visible, select:focus-visible { transition: none; }
+}
+
+/* ============================================================
+   REDUCED MOTION
+   Removed, not shortened. Content is fully visible and every
+   interactive state still reads through colour and shadow.
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+  [data-reveal] { opacity: 1 !important; transform: none !important; }
+  .package-card:hover, .activity-card:hover, .pick-card:hover,
+  .pkg-card:hover, .feature-card:hover, .route-card:hover,
+  .contact-method:hover, .transfer-features article:hover,
+  .values-grid > *:hover { transform: none !important; }
+  .feature-card:hover img, .package-card:hover .package-image img,
+  .pick-card:hover .pick-media img { transform: none !important; }
+  .button:active, .header-cta:active, .qty-btn:active { transform: none !important; }
+  html { scroll-behavior: auto !important; }
+}
+
+/* If JavaScript never runs, nothing stays hidden. */
+.no-js [data-reveal] { opacity: 1 !important; transform: none !important; }
