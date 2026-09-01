@@ -134,6 +134,35 @@ const activityDetails = {
   'Zipline':'A high-speed zipline across the gorge.'
 };
 
+
+/* Child pricing. Only the entries the 2026 price list actually
+   states — nothing inferred. Everything else shows one price and
+   the enquiry confirms child rates. */
+const childPricing = {
+  'Simunye: The Spirit of Africa (Theatre Show)': { adult: '$49', child: '$25' },
+  'Full Day Chobe':  { adult: '$175', note: 'Children under 12: 25% off' },
+  'Airport Transfer (one-way)': { adult: '$35', note: 'Per vehicle, up to 4 people' }
+};
+
+
+/* One price, or an adult/child pair where the price list gives one. */
+function renderPrice(a) {
+  const c = childPricing[a[0]];
+  if (c && c.child) {
+    return `<div class="price-block">
+      <div class="price-row"><strong>${c.adult}</strong><span>adult</span></div>
+      <div class="price-row is-child"><strong>${c.child}</strong><span>child</span></div>
+    </div>`;
+  }
+  if (c && c.note) {
+    return `<div class="price-block">
+      <div class="price-row"><strong>${a[2]}</strong></div>
+      <div class="price-note">${c.note}</div>
+    </div>`;
+  }
+  return `<div class="price-block"><div class="price-row"><strong>${a[2]}</strong><span>per person</span></div></div>`;
+}
+
 /* ── Quantity-based localStorage helpers ─────────────────────────── */
 function getSelections() {
   try {
@@ -192,7 +221,7 @@ function renderActivities() {
         <h3>${a[0]}</h3>
         <p>${a[4]}</p>
         <div class="activity-bottom">
-          <strong class="activity-price">${a[2]}</strong>
+          ${renderPrice(a)}
           <span class="activity-duration">${a[3]}</span>
           <div class="qty-control${activeClass}" data-name="${a[0]}">
             <button class="qty-btn qty-dec" aria-label="Remove one ${a[0]}" ${qty === 0 ? 'disabled' : ''}>−</button>
@@ -446,7 +475,7 @@ if (itineraryList) {
             <button type="button" data-remove="${name}" aria-label="Remove ${name}">Remove</button>
           </div>`;
         }).join('')
-      : '<p class="empty-selection">No experiences selected yet. <a href="activities.html" style="color:var(--sun);font-weight:600">Browse activities</a> and add what calls to you.</p>';
+      : '<p class="empty-selection">No experiences selected yet. <a href="activities.html" style="color:var(--petrol);font-weight:600;text-decoration:underline">Browse activities</a> and add what calls to you.</p>';
 
     itineraryList.querySelectorAll('[data-remove]').forEach(btn =>
       btn.addEventListener('click', () => {

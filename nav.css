@@ -59,14 +59,14 @@
 .package-image{height:150px;position:relative}
 .package-image::after{
   content:"";position:absolute;inset:0;
-  background:linear-gradient(180deg,rgba(8,25,23,.08),rgba(8,25,23,.72));
+  background:rgba(20,20,18,.26);
   pointer-events:none
 }
 .package-image img{object-position:center}
 .package-card-body{
   position:absolute;inset:0;padding:27px;min-height:0;
   display:flex;flex-direction:column;justify-content:flex-end;z-index:2;
-  background:linear-gradient(180deg,transparent 20%,rgba(8,25,23,.84) 100%);
+  background:rgba(20,20,18,.28);
   color:#fff
 }
 .package-card:has(.package-image){padding:0;min-height:390px;position:relative}

@@ -1,3 +1,3 @@
-.hero{background-image:linear-gradient(90deg,rgba(8,27,25,.67),rgba(8,27,25,.12)),url('hero-waterfall.webp')}
+.hero{background-image:linear-gradient(rgba(20,20,18,.26),rgba(20,20,18,.26)),url('hero-waterfall.webp')}
 .hero .button-light{background:var(--sun);color:var(--ink-deep)}
 .hero-kicker{font-size:clamp(18px,2vw,26px);font-weight:600;margin:-8px 0 25px;color:rgba(255,255,255,.9)}
