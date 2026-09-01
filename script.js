@@ -141,7 +141,7 @@ function renderActivities() {
   );
   count.textContent = visible.length;
 
-  grid.innerHTML = visible.map(a => {
+  grid.innerHTML = visible.map((a, i) => {
     const qty = sels[a[0]] || 0;
     const activeClass = qty > 0 ? ' is-active' : '';
     const delay = Math.min(i, 9) * 55;
