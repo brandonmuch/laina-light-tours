@@ -2,3 +2,18 @@
 .menu-toggle{border-radius:0!important}
 .menu-toggle{border-radius:0}
 .activity-add{margin-left:auto;width:38px;height:38px;flex:0 0 38px;border:1px solid rgba(255,255,255,.85);background:transparent;color:#fff;font:500 24px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;cursor:pointer;display:grid;place-items:center;transition:background 180ms ease,color 180ms ease,transform 180ms ease}.activity-add:hover{background:#fff;color:var(--ink);transform:translateY(-2px)}.activity-add.added{background:var(--sun);border-color:var(--sun);color:var(--ink)}.activity-bottom{gap:10px;align-items:center}.activity-bottom .activity-duration{margin-left:auto}.activity-bottom .activity-add{margin-left:4px}@media(max-width:500px){.activity-add{width:36px;height:36px;flex-basis:36px}}
+
+/* ── Quantity counter ─────────────────────────────────────── */
+.qty-control{display:flex;align-items:center;gap:0;margin-left:auto;border:1px solid rgba(255,255,255,.5);border-radius:99px;overflow:hidden;transition:border-color 180ms}
+.qty-control.is-active{border-color:var(--sun)}
+.qty-btn{width:34px;height:34px;background:transparent;border:none;color:#fff;font-size:18px;line-height:1;cursor:pointer;display:grid;place-items:center;transition:background 150ms,color 150ms;flex-shrink:0}
+.qty-btn:hover:not(:disabled){background:rgba(255,255,255,.15)}
+.qty-btn:disabled{opacity:.3;cursor:default}
+.qty-val{min-width:28px;text-align:center;font-size:13px;font-weight:600;color:#fff;line-height:1}
+.qty-control.is-active .qty-val{color:var(--sun)}
+.qty-control.is-active .qty-inc{background:var(--sun);color:var(--ink)}
+.qty-control.is-active .qty-inc:hover{background:var(--sun-light,#f0b86e)}
+@media(max-width:500px){.qty-btn{width:32px;height:32px;font-size:16px}}
+
+/* ── Itinerary quantity badge ─────────────────────────────── */
+.item-qty{display:inline-block;background:var(--sun);color:var(--ink);font-size:11px;font-weight:700;padding:2px 7px;border-radius:99px;margin-left:6px;vertical-align:middle}
