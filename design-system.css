@@ -4164,3 +4164,9 @@ h2 { max-width: 34ch; }
 .activity-card .price-row span,
 .activity-card .activity-duration { font-size: var(--t-sm) !important; }
 .activity-card .activity-category { font-size: var(--t-sm) !important; padding: 6px 14px; }
+
+/* Balance the hero headline across its lines rather than leaving a
+   single orphan word on the second line. */
+.hero-copy h1, .section-heading h2, .pkg-hero h1, .itinerary-hero-block h1 {
+  text-wrap: balance;
+}
