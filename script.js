@@ -1,3 +1,41 @@
+/* ============================================================
+   SITE CONFIG — single source of truth for contact details.
+   TODO: replace the two placeholder values below with the real
+   business number/email. Nothing else needs to change; every
+   WhatsApp link and contact row on the site reads from here.
+   ============================================================ */
+const SITE = {
+  // International format, digits only, no + or spaces.
+  whatsapp: '263771234567',            // ← PLACEHOLDER
+  email:    'hello@lainalighttours.com', // ← PLACEHOLDER
+  get phonePretty() {
+    const d = this.whatsapp;
+    return '+' + d.slice(0,3) + ' ' + d.slice(3,5) + ' ' + d.slice(5,8) + ' ' + d.slice(8);
+  }
+};
+
+function waLink(message) {
+  return 'https://wa.me/' + SITE.whatsapp + '?text=' + encodeURIComponent(message);
+}
+
+/* Rewrite every wa.me / mailto / tel link from SITE so the
+   placeholders only ever live in one place. */
+function applySiteContact() {
+  document.querySelectorAll('a[href*="wa.me/"]').forEach(a => {
+    const q = a.href.split('?text=')[1] || '';
+    a.href = 'https://wa.me/' + SITE.whatsapp + (q ? '?text=' + q : '');
+  });
+  document.querySelectorAll('a[href^="tel:"]').forEach(a => {
+    a.href = 'tel:+' + SITE.whatsapp;
+    if (a.dataset.autofill !== 'off') a.textContent = SITE.phonePretty;
+  });
+  document.querySelectorAll('a[href^="mailto:"]').forEach(a => {
+    a.href = 'mailto:' + SITE.email;
+    if (a.dataset.autofill !== 'off') a.textContent = SITE.email;
+  });
+}
+document.addEventListener('DOMContentLoaded', applySiteContact);
+
 const activities = [
   ['13-Min Helicopter Flight','Flights','$204','12–13 min','See the Falls from above on a scenic figure-eight flight.','Laina-Light-Tours-Activities-Images-Copilot/activities/13-min-helicopter-flight-01.jpeg'],
   ['Explore the Zambezi Flight','Flights','$249','22 min','Follow the Falls, Batoka Gorge and river islands from the air. $50 government/fuel surcharge charged separately.','Laina-Light-Tours-Activities-Images-Copilot/activities/explore-the-zambezi-flight.jpeg'],
@@ -145,7 +183,7 @@ function renderActivities() {
     const qty = sels[a[0]] || 0;
     const activeClass = qty > 0 ? ' is-active' : '';
     const delay = Math.min(i, 9) * 55;
-    return `<article class="activity-card" data-name="${a[0]}" style="animation-delay:${delay}ms">
+    return `<article class="activity-card" data-name="${a[0]}" data-category="${a[1]}" style="animation-delay:${delay}ms">
       <div class="activity-card-image">
         <img src="${a[5]}" alt="${a[0]}">
         <span class="activity-category">${a[1]}</span>
@@ -254,12 +292,41 @@ if (grid) {
 
 /* ── Booking form ────────────────────────────────────────────────── */
 const booking = document.querySelector('#booking-form');
+
+/* Maps the "I'm looking for" select onto real activity categories
+   so the search actually filters the catalogue. */
+const INTEREST_TO_CATEGORY = {
+  'Any experience':        '',
+  'Flights over the Falls':'Flights',
+  'Wildlife & safari':     'Safari',
+  'River cruises':         'Cruises',
+  'Adrenaline':            'Adrenaline'
+};
+
 if (booking) booking.addEventListener('submit', e => {
   e.preventDefault();
-  const date = booking.querySelector('input[type="date"]')?.value;
+  const date       = booking.querySelector('input[type="date"]')?.value || '';
+  const interest   = booking.querySelector('select[name="type"]')?.value || '';
+  const travellers = booking.querySelector('select[name="travellers"]')?.value || '';
+  const mode       = booking.dataset.mode || 'activities';
+
   if (date) localStorage.setItem('lainaDates', JSON.stringify({ arrival: date }));
-  document.querySelector('#booking-message').textContent =
-    'Lovely. We will shape a first draft of your adventure and be in touch shortly.';
+  if (travellers) localStorage.setItem('lainaTravellers', travellers);
+
+  // "Ready-made packages" stays on the page and scrolls to them.
+  if (mode === 'packages') {
+    document.querySelector('#formal-packages')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const msg = document.querySelector('#booking-message');
+    if (msg) msg.textContent = 'Here are our ready-made packages. Every one can be adjusted to your dates.';
+    return;
+  }
+
+  // "Individual activities" carries the filter through to the catalogue.
+  const params = new URLSearchParams();
+  const cat = INTEREST_TO_CATEGORY[interest];
+  if (cat)  params.set('category', cat);
+  if (date) params.set('date', date);
+  window.location.href = 'activities.html' + (params.toString() ? '?' + params : '');
 });
 
 /* ── Newsletter ──────────────────────────────────────────────────── */
@@ -321,10 +388,19 @@ document.querySelectorAll('.search-tab').forEach(tab =>
     });
     const form  = document.querySelector('#booking-form');
     if (form) form.dataset.mode = tab.dataset.bookingMode;
+    const packages = tab.dataset.bookingMode === 'packages';
     const title = document.querySelector('.booking-intro h2');
-    if (title) title.innerHTML = tab.dataset.bookingMode === 'packages'
+    if (title) title.innerHTML = packages
       ? 'Choose your<br><i>stay awhile.</i>'
       : 'Build your<br><i>perfect day.</i>';
+
+    // The two modes now lead to genuinely different places, so the
+    // submit label and the irrelevant fields change with them.
+    const submit = form?.querySelector('button[type="submit"]');
+    if (submit) submit.childNodes[0].nodeValue = packages ? 'Show me packages ' : 'Find my adventure ';
+    form?.querySelectorAll('label').forEach(l => {
+      if (/looking for/i.test(l.textContent)) l.style.display = packages ? 'none' : '';
+    });
   })
 );
 
