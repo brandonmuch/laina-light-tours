@@ -233,6 +233,8 @@ function renderActivities() {
     </article>`;
   }).join('');
 
+  if (window.applySquircles) window.applySquircles();
+
   // Wire up card click (open modal) and counter buttons
   grid.querySelectorAll('.activity-card').forEach(card => {
     const name = card.dataset.name;

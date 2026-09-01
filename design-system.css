@@ -327,23 +327,13 @@ input[type="date"], input[type="number"], select, textarea { border-radius: var(
   color: var(--ink);
 }
 
-/* Category is signalled by a solid dot, not a tinted panel. */
-.activity-category::before {
-  content: "";
-  display: inline-block;
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  margin-right: 7px;
-  vertical-align: 1px;
-  background: var(--ink-3);
-}
-.activity-card[data-category="Flights"]    .activity-category::before { background: var(--a-sky); }
-.activity-card[data-category="Safari"]     .activity-category::before { background: var(--a-savanna); }
-.activity-card[data-category="Cruises"]    .activity-category::before,
-.activity-card[data-category="Water"]      .activity-category::before { background: var(--a-river); }
-.activity-card[data-category="Adrenaline"] .activity-category::before { background: var(--a-clay); }
-.activity-card[data-category="Culture"]    .activity-category::before { background: var(--a-dusk); }
-.activity-card[data-category="Transfers"]  .activity-category::before { background: var(--a-sand); }
+
+
+
+
+
+
+
 
 /* card-treatment.css already overlays these; no second layer. */
 .feature-overlay { position: relative; z-index: 2; padding: var(--s-5); }
@@ -714,4 +704,208 @@ select:focus-visible, [tabindex]:focus-visible {
    4.13:1 on the amber panel. Needs the specificity to win. */
 .transfer-cta p, .transfer-cta > p, .transfer-cta p:not(.eyebrow) {
   color: var(--charcoal) !important;
+}
+
+/* ============================================================
+   SQUIRCLE — Apple-style continuous corner smoothing
+   ============================================================
+
+   Three layers, best first:
+
+   1. `corner-shape: squircle` — native, no JS, no clipping side
+      effects. Chrome 139+ / Safari TP. Used automatically where
+      supported.
+   2. squircle.js — measures each element and writes a per-element
+      `clip-path: path()` in real pixels, so the curve is identical
+      on a 220x46 button and a 320x400 card.
+   3. Plain `border-radius` — the fallback, and what everything
+      already has, so nothing breaks if both above are unavailable.
+
+   A note on clip-path: it clips box-shadow too. Elements that rely
+   on a shadow for elevation get the shadow moved to a wrapper, or
+   keep plain border-radius. That is why the cards below use
+   `corner-shape` first and only fall back to clipping.
+   ============================================================ */
+
+@supports (corner-shape: squircle) {
+  .button, .header-cta, .button-light, .button-dark,
+  .package-card, .activity-card, .contact-method,
+  .feature-card, .package-image, .activity-image,
+  .split-image, .home-transfers-image, .modal-card,
+  .booking-wrap, .customizer-section, .contact-section,
+  .home-transfers, .card-tag, .package-label, .activity-category,
+  .booking-form input, .booking-form select, .customizer-option,
+  .itinerary-guide, .selected-item {
+    corner-shape: squircle;
+  }
+}
+
+/* JS path fallback. Only elements that do not depend on an outer
+   shadow are clipped, so nothing loses its elevation. */
+@supports not (corner-shape: squircle) {
+  [data-squircle] { clip-path: inset(0 round var(--r-md)); }
+}
+
+/* Media panels are pure fills — safe to clip in every engine. */
+.feature-card, .package-image, .activity-image,
+.split-image, .home-transfers-image { will-change: auto; }
+
+/* ============================================================
+   BUTTONS — fully round
+   A pill is already maximum corner radius, so corner smoothing
+   does not apply to it: there is no straight edge meeting a curve
+   left to blend. Squircle stays on the cards and panels, where the
+   straight run is long enough for the difference to read.
+   ============================================================ */
+
+.button, .button-light, .button-dark, .header-cta,
+.text-link.button, .transfer-cta .button, .hero .button {
+  border-radius: var(--r-pill) !important;
+  padding: 14px 28px;
+}
+
+/* Icon-only and small controls follow the same language. */
+.circle-arrow, .qty-btn, .menu-toggle { border-radius: var(--r-circle); }
+
+/* Tags on card images read as pills too, so the vocabulary is
+   consistent: everything interactive or label-like is round,
+   everything structural is a smoothed rectangle. */
+.card-tag, .package-label, .activity-category {
+  border-radius: var(--r-pill);
+  padding: 6px 14px;
+}
+
+@supports (corner-shape: squircle) {
+  .button, .header-cta, .button-light, .button-dark,
+  .card-tag, .package-label, .activity-category { corner-shape: round; }
+}
+
+/* ============================================================
+   MOBILE NAV — menu control on the far right
+   Source order is brand, toggle, nav, CTA. On small screens the
+   toggle is pushed to the end of the flex row so it sits hard
+   right, with the brand on the left and nothing between them.
+   ============================================================ */
+
+@media (max-width: 900px) {
+  .site-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-3);
+  }
+  .brand        { order: 1; margin-right: auto; }
+  .header-cta   { order: 2; padding: 10px 16px; font-size: var(--t-micro); }
+  .menu-toggle  {
+    order: 3;
+    display: inline-grid;
+    place-items: center;
+    width: 44px;               /* 44px minimum touch target */
+    height: 44px;
+    margin-left: var(--s-2);
+    background: none;
+    border: 0;
+    color: var(--ink);
+    font-size: 22px;
+    cursor: pointer;
+  }
+  .main-nav { order: 4; }
+}
+
+@media (max-width: 560px) {
+  .header-cta span:not(.cta-ico) { display: none; }   /* icon-only CTA */
+  .header-cta { padding: 11px 14px; }
+}
+
+/* ============================================================
+   PACKAGE CARDS — copy sits over the photograph
+   .package-card-body is absolutely positioned and transparent, so
+   every text token inside it must be light. The dark body colour
+   was making the copy and prices disappear into the image.
+   ============================================================ */
+
+.package-card { background: transparent; border: 0; }
+
+.package-card .package-card-body,
+.package-card .package-card-body * { color: #fff; }
+
+.package-card .package-copy,
+.package-card .package-days { color: rgba(255,255,255,.90); }
+
+.package-card .price-row strong { color: #fff; }
+.package-card .price-row span   { color: rgba(255,255,255,.82); }
+.package-card .price-row.is-child strong { color: rgba(255,255,255,.94); }
+.package-card .price-note { color: rgba(255,255,255,.80); }
+
+.package-card .package-footer { border-top-color: rgba(255,255,255,.28); }
+
+/* Legibility from a shadow on the type, not from darkening the
+   photograph further. */
+.package-card h3,
+.package-card .package-copy,
+.package-card .package-days,
+.package-card .price-row strong,
+.package-card .price-row span {
+  text-shadow: 0 1px 3px rgba(0,0,0,.55), 0 2px 16px rgba(0,0,0,.4);
+}
+
+/* Label stays an opaque pill so it reads at any image brightness. */
+.package-card .package-label {
+  background: #fff;
+  color: var(--charcoal);
+  text-shadow: none;
+}
+
+/* The arrow badge likewise. */
+.package-card .circle-arrow { background: #fff; color: var(--charcoal); }
+
+/* Elevation cannot come from a shadow on a transparent card, so the
+   hover state lifts the image instead. */
+.package-card:hover { box-shadow: none; transform: translateY(-3px); }
+
+/* ============================================================
+   Absolutely-positioned fill images must not carry their own
+   radius. The parent already clips with overflow:hidden, and a
+   larger radius on the child pulls its corners inside the
+   parent's, exposing the panel background as a dark wedge.
+   ============================================================ */
+
+.home-transfers-image,
+.home-transfers-image img,
+.split-image,
+.about-hero .split-image {
+  border-radius: 0;
+}
+
+.home-transfers .home-transfers-image { inset: 0; }
+.home-transfers .home-transfers-image img { width: 100%; height: 100%; object-fit: cover; }
+
+/* With the photograph covering the panel edge to edge, the dark
+   fallback behind it is no longer visible anywhere. */
+.home-transfers { background: var(--surface-2); }
+
+/* ============================================================
+   BENEFIT ICONS — larger, and meaningful rather than decorative
+   pin = we are based here, calendar = dates handled,
+   shield = secure booking, binoculars = experiences we scouted.
+   No sparkle/diamond: that glyph has become shorthand for
+   "AI did this" and says nothing about the service.
+   ============================================================ */
+
+.benefit-icon {
+  width: 40px;
+  height: 40px;
+  font-size: 34px;          /* icon is 1em, so this is the drawn size */
+  color: var(--petrol);
+  background: none;
+  border: 0;
+}
+.benefit-icon .icon { stroke-width: 1.5; }
+
+.benefit { gap: var(--s-4); align-items: flex-start; }
+.benefit strong { font-size: var(--t-md); margin-bottom: 4px; }
+.benefit span { font-size: var(--t-sm); color: var(--ink-3); }
+
+@media (max-width: 560px) {
+  .benefit-icon { width: 34px; height: 34px; font-size: 28px; }
 }
