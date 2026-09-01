@@ -1,11 +1,106 @@
-.brand::before{content:"";display:block;width:34px;height:34px;flex:0 0 34px;background:url('Laina Light Tours Logo Mark.png') center/contain no-repeat}.site-footer .brand::before{display:none}@media(max-width:800px){.main-nav a{color:var(--ink-deep)!important}.main-nav a:hover{color:var(--sun)!important}}
-.site-header{position:absolute;top:0;left:0;right:0;background:transparent;color:#fff;transition:background .25s ease,box-shadow .25s ease,color .25s ease}.site-header .brand,.site-header .header-cta,.site-header .main-nav a{color:#fff}.site-header .brand-mark{display:none}.site-header.scrolled{position:fixed;background:rgba(243,240,233,.97);color:var(--ink-deep);box-shadow:0 4px 20px rgba(16,47,44,.1);backdrop-filter:blur(12px)}.site-header.scrolled .brand,.site-header.scrolled .header-cta,.site-header.scrolled .main-nav a{color:var(--ink-deep)}.site-header.scrolled .main-nav a.active{border-color:var(--sun)}.site-header .main-nav a:hover,.site-header.scrolled .main-nav a:hover{color:var(--sun)}.site-header.scrolled .menu-toggle{color:var(--ink-deep)}.booking-form input,.booking-form select,.newsletter-form input,.search-box input,.filter-row select{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-weight:400}.package-image{height:150px;position:relative}.package-image::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,25,23,.08),rgba(8,25,23,.72));pointer-events:none}.package-image img{object-position:center}.package-card-body{position:absolute;inset:0;padding:27px;min-height:0;display:flex;flex-direction:column;justify-content:flex-end;z-index:2;background:linear-gradient(180deg,transparent 20%,rgba(8,25,23,.84) 100%);color:#fff}.package-card:has(.package-image){padding:0;min-height:390px;position:relative}.package-card:has(.package-image) .package-image{position:absolute;inset:0;height:100%}.package-card .package-days{color:rgba(255,255,255,.72)}.package-card .package-copy{color:rgba(255,255,255,.82)}.package-card .package-footer{border-color:rgba(255,255,255,.3);color:rgba(255,255,255,.8)}.package-card .package-footer strong{color:#fff}@media(max-width:800px){.site-header{position:absolute}.site-header.scrolled{position:fixed}.benefits-bar{grid-template-columns:repeat(2,1fr)}}@media(max-width:500px){.benefits-bar{grid-template-columns:1fr 1fr;padding:25px 22px 0;gap:18px}.benefit{align-items:flex-start}.benefit-icon{width:32px;height:32px;flex-basis:32px;font-size:16px}.benefit strong{font-size:11px}.benefit div span{font-size:9px}.package-card:has(.package-image){min-height:390px}}
-.site-header{position:absolute;top:0;left:0;right:0;background:transparent;color:#fff;transition:background .25s ease,box-shadow .25s ease,color .25s ease}.site-header .brand,.site-header .header-cta,.site-header .main-nav a{color:#fff}.site-header .brand-mark{display:none}.site-header.scrolled{position:fixed;background:rgba(243,240,233,.97);color:var(--ink-deep);box-shadow:0 4px 20px rgba(16,47,44,.1);backdrop-filter:blur(12px)}.site-header.scrolled .brand,.site-header.scrolled .header-cta,.site-header.scrolled .main-nav a{color:var(--ink-deep)}.site-header.scrolled .main-nav a.active{border-color:var(--sun)}.site-header .main-nav a:hover,.site-header.scrolled .main-nav a:hover{color:var(--sun)}.site-header.scrolled .menu-toggle{color:var(--ink-deep)}.booking-form input,.booking-form select,.newsletter-form input,.search-box input,.filter-row select{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-weight:400}.package-image{height:150px;position:relative}.package-image::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,25,23,.08),rgba(8,25,23,.72));pointer-events:none}.package-image img{object-position:center}.package-card-body{position:absolute;inset:0;padding:27px;min-height:0;display:flex;flex-direction:column;justify-content:flex-end;z-index:2;background:linear-gradient(180deg,transparent 20%,rgba(8,25,23,.84) 100%);color:#fff}.package-card:has(.package-image){padding:0;min-height:390px;position:relative}.package-card:has(.package-image) .package-image{position:absolute;inset:0;height:100%}.package-card .package-days{color:rgba(255,255,255,.72)}.package-card .package-copy{color:rgba(255,255,255,.82)}.package-card .package-footer{border-color:rgba(255,255,255,.3);color:rgba(255,255,255,.8)}.package-card .package-footer strong{color:#fff}@media(max-width:800px){.site-header{position:absolute}.site-header.scrolled{position:fixed}.benefits-bar{grid-template-columns:repeat(2,1fr)}}@media(max-width:500px){.benefits-bar{grid-template-columns:1fr 1fr;padding:25px 22px 0;gap:18px}.benefit{align-items:flex-start}.benefit-icon{width:32px;height:32px;flex-basis:32px;font-size:16px}.benefit strong{font-size:11px}.benefit div span{font-size:9px}.package-card:has(.package-image){min-height:390px}}
-.site-header{position:absolute;top:0;left:0;right:0;background:transparent;color:#fff;transition:background .25s ease,box-shadow .25s ease,color .25s ease}.site-header .brand,.site-header .header-cta,.site-header .main-nav a{color:#fff}.site-header .brand-mark{display:none}.site-header.scrolled{position:fixed;background:rgba(243,240,233,.97);color:var(--ink-deep);box-shadow:0 4px 20px rgba(16,47,44,.1);backdrop-filter:blur(12px)}.site-header.scrolled .brand,.site-header.scrolled .header-cta,.site-header.scrolled .main-nav a{color:var(--ink-deep)}.site-header.scrolled .main-nav a.active{border-color:var(--sun)}.site-header .main-nav a:hover,.site-header.scrolled .main-nav a:hover{color:var(--sun)}.site-header.scrolled .menu-toggle{color:var(--ink-deep)}.booking-form input,.booking-form select,.newsletter-form input,.search-box input,.filter-row select{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-weight:400}.package-image{height:150px;position:relative}.package-image::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,25,23,.08),rgba(8,25,23,.72));pointer-events:none}.package-image img{object-position:center}.package-card-body{position:absolute;inset:0;padding:27px;min-height:0;display:flex;flex-direction:column;justify-content:flex-end;z-index:2;background:linear-gradient(180deg,transparent 20%,rgba(8,25,23,.84) 100%);color:#fff}.package-card:has(.package-image){padding:0;min-height:390px;position:relative}.package-card:has(.package-image) .package-image{position:absolute;inset:0;height:100%}.package-card .package-days{color:rgba(255,255,255,.72)}.package-card .package-copy{color:rgba(255,255,255,.82)}.package-card .package-footer{border-color:rgba(255,255,255,.3);color:rgba(255,255,255,.8)}.package-card .package-footer strong{color:#fff}@media(max-width:800px){.site-header{position:absolute}.site-header.scrolled{position:fixed}.benefits-bar{grid-template-columns:repeat(2,1fr)}}@media(max-width:500px){.benefits-bar{grid-template-columns:1fr 1fr;padding:25px 22px 0;gap:18px}.benefit{align-items:flex-start}.benefit-icon{width:32px;height:32px;flex-basis:32px;font-size:16px}.benefit strong{font-size:11px}.benefit div span{font-size:9px}.package-card:has(.package-image){min-height:390px}}
-@media(max-width:800px){.site-header .main-nav a,.site-header.scrolled .main-nav a{color:var(--ink-deep)}.site-header .main-nav a:hover,.site-header.scrolled .main-nav a:hover{color:var(--sun)}}
-.site-header:not(.scrolled) .menu-toggle{color:#fff}
-.site-header .main-nav a{color:var(--ink-deep)}.site-header.scrolled .main-nav a{color:var(--ink-deep)}
-.activities-page .site-header{background:transparent}.activities-page .site-header .brand,.activities-page .site-header .header-cta,.activities-page .site-header .main-nav a{color:#fff}.activities-page .activities-hero{background-image:linear-gradient(90deg,rgba(8,34,31,.82),rgba(8,34,31,.25)),url('Activities BG.jpg');background-position:center 48%}
-@media(max-width:800px){.activities-page .main-nav a{color:var(--ink-deep)!important}.activities-page .main-nav a:hover{color:var(--sun)!important}}
-@media(max-width:800px){.site-header.menu-open .brand,.site-header.menu-open .header-cta,.site-header.menu-open .menu-toggle{color:var(--ink-deep)!important}.site-header.menu-open .brand::before{filter:none}}
-.activities-page .site-header.scrolled .brand,.activities-page .site-header.scrolled .header-cta{color:var(--ink-deep)!important}
+.brand::before{
+  content:"";display:block;width:34px;height:34px;flex:0 0 34px;
+  background:url('Laina Light Tours Logo Mark.png') center/contain no-repeat
+}
+
+/* ── Default header — white bg, dark text (non-hero pages) ── */
+.site-header{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  height:82px;display:flex;align-items:center;
+  justify-content:space-between;padding:0 5vw;
+  background:#ffffff;color:var(--ink-deep);
+  box-shadow:0 1px 0 #eeeeee;
+  transition:background .28s ease,box-shadow .28s ease,color .28s ease
+}
+.site-header .brand,
+.site-header .header-cta,
+.site-header .main-nav a{color:var(--ink-deep)}
+.site-header .main-nav a:hover,
+.site-header .main-nav a.active{color:var(--ink)}
+.site-header .main-nav a.active{border-bottom:2px solid var(--sun);padding-bottom:7px}
+.site-header .menu-toggle{color:var(--ink-deep)}
+
+/* ── Hero header — transparent initially, fixed white on scroll ─ */
+.site-header.hero-header{
+  position:absolute;
+  background:transparent;
+  box-shadow:none;
+  color:#fff
+}
+.site-header.hero-header .brand,
+.site-header.hero-header .header-cta,
+.site-header.hero-header .main-nav a{color:#fff}
+.site-header.hero-header .main-nav a:hover{color:rgba(255,255,255,.75)}
+.site-header.hero-header .menu-toggle{color:#fff}
+
+/* ── Scrolled state (applies to both) ────────────────────────── */
+.site-header.scrolled{
+  position:fixed;
+  background:rgba(255,255,255,.97);
+  box-shadow:0 1px 0 #eeeeee;
+  color:var(--ink-deep);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)
+}
+.site-header.scrolled .brand,
+.site-header.scrolled .header-cta,
+.site-header.scrolled .main-nav a{color:var(--ink-deep)}
+.site-header.scrolled .main-nav a:hover{color:var(--sun)}
+.site-header.scrolled .main-nav a.active{border-color:var(--sun)}
+.site-header.scrolled .menu-toggle{color:var(--ink-deep)}
+
+/* ── Mobile nav ───────────────────────────────────────────────── */
+.booking-form input,.booking-form select,
+.newsletter-form input,.search-box input,.filter-row select{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font-weight:400
+}
+
+/* ── Package card image overlay ───────────────────────────────── */
+.package-image{height:150px;position:relative}
+.package-image::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(8,25,23,.08),rgba(8,25,23,.72));
+  pointer-events:none
+}
+.package-image img{object-position:center}
+.package-card-body{
+  position:absolute;inset:0;padding:27px;min-height:0;
+  display:flex;flex-direction:column;justify-content:flex-end;z-index:2;
+  background:linear-gradient(180deg,transparent 20%,rgba(8,25,23,.84) 100%);
+  color:#fff
+}
+.package-card:has(.package-image){padding:0;min-height:390px;position:relative}
+.package-card:has(.package-image) .package-image{position:absolute;inset:0;height:100%}
+.package-card .package-days{color:rgba(255,255,255,.72)}
+.package-card .package-copy{color:rgba(255,255,255,.82)}
+.package-card .package-footer{border-color:rgba(255,255,255,.3);color:rgba(255,255,255,.8)}
+.package-card .package-footer strong{color:#fff}
+
+/* ── Responsive ───────────────────────────────────────────────── */
+@media(max-width:800px){
+  .site-header{position:fixed}
+  .site-header.hero-header{position:fixed;background:#fff;box-shadow:0 1px 0 #eee;color:var(--ink-deep)}
+  .site-header.hero-header .brand,
+  .site-header.hero-header .header-cta,
+  .site-header.hero-header .main-nav a,
+  .site-header.hero-header .menu-toggle{color:var(--ink-deep)}
+  .benefits-bar{grid-template-columns:repeat(2,1fr)}
+  .main-nav a{color:var(--ink-deep)!important}
+  .main-nav a:hover{color:var(--sun)!important}
+}
+@media(max-width:500px){
+  .benefits-bar{grid-template-columns:1fr 1fr;padding:25px 22px 0;gap:18px}
+  .benefit{align-items:flex-start}
+  .benefit-icon{width:32px;height:32px;flex-basis:32px;font-size:16px}
+  .benefit strong{font-size:11px}
+  .benefit div span{font-size:9px}
+  .package-card:has(.package-image){min-height:390px}
+}
+
+/* ── Menu-open state ──────────────────────────────────────────── */
+@media(max-width:800px){
+  .site-header.menu-open .brand,
+  .site-header.menu-open .header-cta,
+  .site-header.menu-open .menu-toggle{color:var(--ink-deep)!important}
+  .site-header.menu-open .brand::before{filter:none}
+}
