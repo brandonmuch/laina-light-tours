@@ -4120,3 +4120,47 @@ h2 { max-width: 34ch; }
 }
 .package-card .package-copy { -webkit-line-clamp: 3; font-size: var(--t-sm) !important; }
 .package-card { min-height: 440px; }
+
+/* ============================================================
+   PACKAGE CARD TYPE — larger
+   There is room in these cards; the type was sitting small in it.
+   ============================================================ */
+
+.package-card h3 {
+  font-size: clamp(22px, 2.2vw, 30px) !important;
+  line-height: 1.18 !important;
+  font-weight: 700;
+}
+.package-card .package-copy {
+  font-size: var(--t-base) !important;
+  line-height: 1.55 !important;
+  color: rgba(255,255,255,.88) !important;
+}
+.package-card .package-days {
+  font-size: var(--t-sm) !important;
+  font-weight: 500;
+}
+.package-card .price-row strong { font-size: 32px !important; }
+.package-card .price-row.is-child strong { font-size: 22px !important; }
+.package-card .price-row span { font-size: var(--t-sm) !important; }
+.package-card .package-label { font-size: var(--t-sm) !important; padding: 7px 15px; }
+
+.package-card { min-height: 480px; }
+@media (max-width: 1000px) { .package-card { min-height: 460px; } }
+@media (max-width: 640px)  { .package-card { min-height: 420px; } }
+
+/* Pick cards get the same lift in scale. */
+.pick-body h3 { font-size: var(--t-lg) !important; }
+.pick-body p { font-size: var(--t-base) !important; line-height: 1.55; }
+.pick-price strong { font-size: 30px !important; }
+.pick-price span, .pick-dur { font-size: var(--t-sm) !important; }
+.pick-cta { font-size: var(--t-base) !important; }
+.pick-tag { font-size: var(--t-sm) !important; padding: 6px 14px; }
+
+/* And the activity cards. */
+.activity-card .activity-details h3 { font-size: var(--t-lg) !important; }
+.activity-card .activity-details > p { font-size: var(--t-base) !important; }
+.activity-card .price-row strong { font-size: 30px !important; }
+.activity-card .price-row span,
+.activity-card .activity-duration { font-size: var(--t-sm) !important; }
+.activity-card .activity-category { font-size: var(--t-sm) !important; padding: 6px 14px; }
