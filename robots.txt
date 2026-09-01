@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Working files, not pages
+Disallow: /images/vehicles/PROMPTS.md
+Disallow: /images/vehicles/NEEDED.md
+Disallow: /images/README.md
+
+Sitemap: https://laina-light-tours.brandonmuchenje01.workers.dev/sitemap.xml

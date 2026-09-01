@@ -56,7 +56,7 @@ const activities = [
   ['Livingstone Island Lunch – Zambia','Cruises','$240','—','Lunch at the edge of the Zambezi, on Livingstone Island.','More Images/Livingstone Island lunch.webp'],
   ['Rhino Safari – Zambia','Safari','$125','—','A conservation-led safari in Mosi-oa-Tunya National Park.','More Images/Rhino Safari.avif'],
   ['25-Min Helicopter Flight','Flights','$363','25 min','Falls, Gorge and Zambezi National Park loop.','Laina-Light-Tours-Activities-Images-Copilot/activities/25-min-helicopter-flight.jpg'],
-  ['Flight of Angels (Helicopter)','Flights','$204','12–13 min','Figure-eight flight over the Falls.','Laina-Light-Tours-Activities-Images-Copilot/activities/flight-of-angels-helicopter-01.png'],
+  ['Flight of Angels (Helicopter)','Flights','$204','12–13 min','Figure-eight flight over the Falls.','Laina-Light-Tours-Activities-Images-Copilot/activities/flight-of-angels-helicopter-01.webp'],
   ['Bridge Slide (Zipline)','Adrenaline','$58','15–20 min','Cross-border zipline between Zambia and Zimbabwe.','Laina-Light-Tours-Activities-Images-Copilot/activities/bridge-slide-zipline.jpeg'],
   ['Bridge Tour','Adrenaline','$76','2 hrs','Catwalk tour beneath Victoria Falls Bridge.','Laina-Light-Tours-Activities-Images-Copilot/activities/bridge-tour.jpeg'],
   ['Bungee Jump','Adrenaline','$194','15–20 min','111m jump from Victoria Falls Bridge.','Laina-Light-Tours-Activities-Images-Copilot/activities/bungee-jump.jpeg'],

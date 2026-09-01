@@ -1,0 +1,27 @@
+{
+  "name": "Laina Light Tours",
+  "short_name": "Laina Light",
+  "description": "Victoria Falls tour operator. Scenic flights, safaris, river cruises, adrenaline and airport transfers, arranged personally with trusted local partners.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#024c5c",
+  "icons": [
+    {
+      "src": "/favicon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
