@@ -1205,3 +1205,389 @@ select:focus-visible, [tabindex]:focus-visible {
 /* Any panel that sits on a photograph gets light copy, the same
    rule the home page cards follow. */
 .transfer-card.has-image, .transfer-card.has-image * { color: #fff; }
+
+/* ============================================================
+   CART BUTTONS + COUNT BADGES
+   ============================================================ */
+
+.btn-count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  margin-left: 2px;
+  border-radius: var(--r-pill);
+  background: var(--amber);
+  color: var(--charcoal);
+  font-size: var(--t-micro);
+  font-weight: 700;
+  line-height: 1;
+}
+.btn-count[hidden] { display: none; }
+
+.header-cart {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: 12px 18px;
+  border-radius: var(--r-pill);
+  background: var(--surface-2);
+  color: var(--ink);
+  font-size: var(--t-sm);
+  font-weight: 600;
+  text-decoration: none;
+  transition: background var(--dur-fast) var(--ease-out);
+}
+.header-cart:hover { background: #e9e9e4; }
+.header-cart .icon { font-size: 16px; }
+
+.hero-actions { display: flex; flex-wrap: wrap; gap: var(--s-3); align-items: center; }
+.hero-cart { background: rgba(255,255,255,.92); color: var(--charcoal); }
+.hero-cart:hover { background: #fff; }
+.hero-cart .icon { stroke: var(--charcoal); }
+
+@media (max-width: 900px) {
+  .header-cart span[data-cart-label] { display: none; }
+  .header-cart { padding: 10px 12px; }
+}
+
+/* ============================================================
+   SEARCH BAR — real icon, proper field
+   ============================================================ */
+
+.search-box {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  width: 100%;
+  max-width: 340px;
+  height: 48px;
+  padding: 0 var(--s-4);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  color: var(--ink-3);
+  font-size: var(--t-base);
+  transition: border-color var(--dur-fast) var(--ease-out);
+}
+.search-box:focus-within { border-color: var(--ink); }
+.search-box .icon { font-size: 18px; color: var(--ink-3); flex: none; }
+.search-box input {
+  flex: 1; min-width: 0; height: 100%;
+  border: 0; outline: none; background: none;
+  font-size: var(--t-base); color: var(--ink);
+  padding: 0;
+}
+.search-box input::placeholder { color: var(--ink-3); }
+.search-box input::-webkit-search-cancel-button { cursor: pointer; }
+
+#category-filter {
+  height: 48px;
+  padding: 0 var(--s-4);
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: var(--t-base);
+}
+
+.filter-row { display: flex; flex-wrap: wrap; gap: var(--s-3); align-items: center; }
+@media (max-width: 700px) {
+  .filter-row { width: 100%; }
+  .search-box, #category-filter { max-width: none; width: 100%; }
+}
+
+/* ============================================================
+   MODAL — sized for small screens
+   ============================================================ */
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: none;
+  place-items: center;
+  padding: var(--s-5);
+  background: rgba(18,18,16,.62);
+  overflow-y: auto;
+}
+.modal.open { display: grid; }
+
+.modal-card {
+  position: relative;
+  width: min(560px, 100%);
+  max-height: min(88vh, 780px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  background: var(--surface);
+  border-radius: var(--r-lg);
+  padding: 0 0 var(--s-5);
+}
+.modal-card > :not(img):not(.modal-close) { padding-inline: var(--s-5); }
+.modal-card #modal-image {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  display: block;
+  border-radius: var(--r-lg) var(--r-lg) 0 0;
+  margin-bottom: var(--s-4);
+}
+.modal-card h2 { font-size: var(--t-xl); margin: 0 0 var(--s-2); }
+.modal-card .eyebrow { margin-bottom: var(--s-1); }
+.modal-meta {
+  display: flex; align-items: baseline; gap: var(--s-3);
+  padding-top: var(--s-3); margin-top: var(--s-3);
+  border-top: 1px solid var(--line-soft);
+}
+.modal-meta strong { font-size: var(--t-lg); font-weight: 700; color: var(--ink); }
+.modal-meta span { color: var(--ink-3); font-size: var(--t-sm); }
+#add-itinerary { margin-top: var(--s-4); width: 100%; justify-content: center; }
+
+.modal-close {
+  position: absolute;
+  top: 12px; right: 12px;
+  z-index: 3;
+  width: 38px; height: 38px;
+  display: grid; place-items: center;
+  border: 0;
+  border-radius: var(--r-circle);
+  background: rgba(255,255,255,.94);
+  color: var(--charcoal);
+  font-size: 17px;
+  cursor: pointer;
+}
+.modal-close:hover { background: #fff; }
+
+@media (max-width: 560px) {
+  .modal { padding: 0; align-items: end; }
+  .modal-card {
+    width: 100%;
+    max-height: 92vh;
+    border-radius: var(--r-lg) var(--r-lg) 0 0;
+  }
+  .modal-card #modal-image { aspect-ratio: 16 / 9; border-radius: var(--r-lg) var(--r-lg) 0 0; }
+  .modal-card h2 { font-size: var(--t-lg); }
+}
+
+/* ============================================================
+   ITINERARY PAGE — a confirmation step, not a form dump
+   ============================================================ */
+
+.itinerary-main {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: calc(var(--s-8) + 82px) 24px var(--s-10);
+}
+
+.itinerary-hero-block { margin-bottom: var(--s-7); }
+.itinerary-hero-block h1 { font-size: clamp(34px, 5vw, 52px); margin: var(--s-2) 0 var(--s-3); }
+.itinerary-lead { font-size: var(--t-md); line-height: 1.65; max-width: 60ch; color: var(--ink-2); }
+
+.itinerary-form { display: grid; gap: var(--s-5); }
+
+.itinerary-panel {
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r-lg);
+  padding: clamp(20px, 4vw, 32px);
+}
+@supports (corner-shape: squircle) { .itinerary-panel { corner-shape: squircle; } }
+
+.panel-head { margin-bottom: var(--s-5); }
+.panel-head h2 { font-size: var(--t-lg); margin: 0 0 4px; }
+.panel-head p { font-size: var(--t-sm); color: var(--ink-3); margin: 0; }
+
+.selection-top { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--s-4); flex-wrap: wrap; }
+
+.count-pill {
+  display: inline-grid; place-items: center;
+  min-width: 26px; height: 26px; padding: 0 8px;
+  margin-left: 6px;
+  border-radius: var(--r-pill);
+  background: var(--petrol); color: #fff;
+  font-size: var(--t-micro); font-weight: 700;
+}
+.schedule-progress { font-size: var(--t-sm); color: var(--ink-3); }
+
+.date-fields, .traveller-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--s-4);
+}
+.traveller-fields { margin-top: var(--s-4); }
+
+.itinerary-form label { display: grid; gap: 6px; }
+.itinerary-form label > span { font-size: var(--t-sm); font-weight: 500; color: var(--ink-2); letter-spacing: normal; }
+.itinerary-form input, .itinerary-form select {
+  height: 48px;
+  padding: 0 var(--s-4);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: var(--t-base);
+}
+.itinerary-form input:focus, .itinerary-form select:focus { border-color: var(--ink); outline: none; }
+
+/* ── Selected experience rows ─────────────────────────────────── */
+
+.selected-list { display: grid; gap: var(--s-3); }
+
+.selected-item {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: var(--s-4);
+  padding: var(--s-3);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+}
+@supports (corner-shape: squircle) { .selected-item { corner-shape: squircle; } }
+
+.selected-media {
+  border-radius: var(--r-sm);
+  overflow: hidden;
+  aspect-ratio: 1;
+  background: var(--surface-2);
+}
+.selected-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.selected-body { min-width: 0; display: grid; gap: var(--s-3); align-content: start; }
+.selected-head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--s-3); }
+.selected-head strong { font-size: var(--t-base); font-weight: 600; color: var(--ink); }
+.selected-index {
+  display: inline-block;
+  margin-right: 8px;
+  font-size: var(--t-micro);
+  font-weight: 700;
+  color: var(--ink-3);
+}
+.item-qty {
+  margin-left: 8px;
+  font-size: var(--t-micro);
+  font-weight: 700;
+  color: var(--petrol);
+}
+.selected-body small { font-size: var(--t-sm); color: var(--ink-3); }
+
+.selected-remove {
+  flex: none;
+  width: 32px; height: 32px;
+  display: grid; place-items: center;
+  border: 1px solid var(--line);
+  border-radius: var(--r-circle);
+  background: var(--surface);
+  color: var(--ink-3);
+  cursor: pointer;
+  transition: border-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+}
+.selected-remove:hover { border-color: var(--ink); color: var(--ink); }
+
+.selected-when {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--s-3);
+}
+.selected-when input, .selected-when select { height: 44px; font-size: var(--t-sm); }
+
+@media (max-width: 620px) {
+  .selected-item { grid-template-columns: 1fr; }
+  .selected-media { aspect-ratio: 16 / 9; }
+  .selected-when, .date-fields, .traveller-fields { grid-template-columns: 1fr; }
+}
+
+/* ── Empty state ──────────────────────────────────────────────── */
+
+.empty-selection {
+  text-align: center;
+  padding: var(--s-7) var(--s-4);
+  border: 1px dashed var(--line);
+  border-radius: var(--r-md);
+  color: var(--ink-3);
+}
+.empty-selection p { margin: 0 0 var(--s-2); }
+.empty-selection strong { color: var(--ink); font-size: var(--t-md); }
+.empty-selection .button { margin-top: var(--s-3); }
+
+/* ── Submit ───────────────────────────────────────────────────── */
+
+.itinerary-submit {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-5);
+  flex-wrap: wrap;
+  background: var(--surface-2);
+  border-color: transparent;
+}
+.submit-copy h2 { font-size: var(--t-lg); margin: 0 0 4px; }
+.submit-copy p { font-size: var(--t-sm); color: var(--ink-3); margin: 0; max-width: 44ch; }
+.itinerary-submit .button { flex: none; }
+
+.itinerary-success {
+  padding: var(--s-4) var(--s-5);
+  background: #eef6ef;
+  border: 1px solid #cfe4d2;
+  border-radius: var(--r-md);
+  color: #24502c;
+  font-size: var(--t-sm);
+  line-height: 1.6;
+}
+.itinerary-success[hidden] { display: none; }
+
+/* Legacy itinerary.css uppercases the field labels. */
+.itinerary-form label,
+.itinerary-form label > span,
+.selected-when label > span {
+  text-transform: none !important;
+  letter-spacing: normal !important;
+  font-size: var(--t-sm) !important;
+  color: var(--ink-2);
+}
+.count-pill { background: var(--petrol) !important; color: #fff !important; }
+
+/* ============================================================
+   MOBILE HEADER — brand, cart, menu. Nothing wraps.
+   ============================================================ */
+
+@media (max-width: 700px) {
+  .site-header { gap: var(--s-2); padding-inline: 16px; }
+
+  .brand { order: 1; margin-right: auto; min-width: 0; }
+  .brand span { white-space: nowrap; font-size: var(--t-sm); }
+  .brand-mark { flex: none; }
+
+  /* Cart collapses to icon + badge only. */
+  .header-cart { order: 2; padding: 9px 11px; gap: 5px; }
+  .header-cart span[data-cart-label] { display: none; }
+
+  /* The WhatsApp CTA is the least useful control at this width —
+     the same action is one tap away in the menu and on the page. */
+  .header-cta { display: none; }
+
+  .menu-toggle { order: 3; margin-left: 0; }
+  .main-nav { order: 4; }
+}
+
+@media (max-width: 380px) {
+  .brand span { font-size: var(--t-micro); }
+}
+
+/* Legacy styles.css lays the activities hero out as a two-column
+   space-between row, which collides at phone widths. */
+@media (max-width: 820px) {
+  .activities-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: var(--s-4);
+  }
+  .activities-hero > * { max-width: 100%; }
+  .activities-hero h1 { font-size: clamp(30px, 9vw, 44px); }
+  .activities-hero p { max-width: 46ch; }
+
+  .catalog-top { display: block; }
+  .catalog-top .filter-row { margin-top: var(--s-4); }
+}

@@ -163,6 +163,39 @@ function renderPrice(a) {
   return `<div class="price-block"><div class="price-row"><strong>${a[2]}</strong><span>per person</span></div></div>`;
 }
 
+
+/* ── Per-activity schedule ────────────────────────────────────────
+   Each selected experience can carry its own preferred date and
+   time. Stored separately from the quantities so clearing one does
+   not disturb the other. Shape: { "Bungee Jump": {date, time} }   */
+function getSchedule() {
+  try { return JSON.parse(localStorage.getItem('lainaSchedule') || '{}'); }
+  catch { return {}; }
+}
+function setSchedule(obj) {
+  localStorage.setItem('lainaSchedule', JSON.stringify(obj));
+}
+function setActivitySchedule(name, field, value) {
+  const sc = getSchedule();
+  sc[name] = sc[name] || {};
+  sc[name][field] = value;
+  if (!sc[name].date && !sc[name].time) delete sc[name];
+  setSchedule(sc);
+}
+
+/* Human-readable date for the confirmation and the WhatsApp text. */
+function prettyDate(iso) {
+  if (!iso) return '';
+  const d = new Date(iso + 'T00:00:00');
+  if (isNaN(d)) return iso;
+  return d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+/* Total across quantities, used by every cart counter on the site. */
+function selectionTotal() {
+  return Object.values(getSelections()).reduce((s, q) => s + q, 0);
+}
+
 /* ── Quantity-based localStorage helpers ─────────────────────────── */
 function getSelections() {
   try {
@@ -186,9 +219,23 @@ function setSelections(obj) {
 }
 
 function updateItineraryNav() {
-  const sels = getSelections();
-  const total = Object.values(sels).reduce((sum, q) => sum + q, 0);
+  const total = selectionTotal();
+
   document.querySelectorAll('.itinerary-nav-count').forEach(el => el.textContent = total);
+
+  /* Every cart button on the site carries a live count badge and
+     hides it at zero, so an empty cart never shows a "0". */
+  document.querySelectorAll('[data-cart-count]').forEach(el => {
+    el.textContent = total;
+    el.hidden = total === 0;
+  });
+
+  /* Buttons that change wording once something is selected. */
+  document.querySelectorAll('[data-cart-label]').forEach(el => {
+    el.textContent = total === 0
+      ? el.dataset.cartLabel
+      : (el.dataset.cartLabelActive || el.dataset.cartLabel);
+  });
 }
 
 /* ── Activity grid ───────────────────────────────────────────────── */
@@ -451,7 +498,7 @@ if (itineraryOptions.length) {
   itineraryOptions.forEach(o => o.addEventListener('change', updateItinerary));
 }
 
-/* ── Itinerary page ──────────────────────────────────────────────── */
+/* ── Itinerary page ──────────────────────────────────────── */
 const itineraryList = document.querySelector('#selected-list');
 if (itineraryList) {
   const arrival   = document.querySelector('#arrival-date');
@@ -460,49 +507,154 @@ if (itineraryList) {
   if (savedDates.arrival)   arrival.value   = savedDates.arrival;
   if (savedDates.departure) departure.value = savedDates.departure;
 
+  const savedTravellers = JSON.parse(localStorage.getItem('lainaTravellerCounts') || '{}');
+  const adultSel = document.querySelector('#adult-count');
+  const childSel = document.querySelector('#child-count');
+  if (savedTravellers.adults)   adultSel.value = savedTravellers.adults;
+  if (savedTravellers.children) childSel.value = savedTravellers.children;
+
+  /* Each experience gets its own date and time. The trip dates
+     bound the pickers so nothing can be scheduled outside the stay. */
+  function applyDateBounds() {
+    itineraryList.querySelectorAll('input[type="date"]').forEach(input => {
+      if (arrival.value)   input.min = arrival.value;
+      if (departure.value) input.max = departure.value;
+    });
+  }
+
   const draw = () => {
     const sels  = getSelections();
+    const sched = getSchedule();
     const names = Object.keys(sels);
-    const total = Object.values(sels).reduce((s, q) => s + q, 0);
-    document.querySelector('#selection-count').textContent = total;
+    const total = names.reduce((s, n) => s + sels[n], 0);
+    const countEl = document.querySelector('#selection-count');
+    if (countEl) countEl.textContent = total;
+
+    const scheduled = names.filter(n => sched[n] && sched[n].date).length;
+    const progress = document.querySelector('#schedule-progress');
+    if (progress) {
+      progress.textContent = names.length
+        ? `${scheduled} of ${names.length} scheduled`
+        : '';
+    }
 
     itineraryList.innerHTML = names.length
       ? names.map((name, i) => {
           const qty = sels[name];
-          return `<div class="selected-item">
-            <div>
-              <strong>${i + 1}. ${name}${qty > 1 ? ` <span class="item-qty">× ${qty}</span>` : ''}</strong>
-              <small>${activityDetails[name] || 'Details confirmed with your local team.'}</small>
+          const a   = activities.find(x => x[0] === name);
+          const img = a ? a[5] : '';
+          const sc  = sched[name] || {};
+          return `<article class="selected-item" data-name="${name}">
+            <div class="selected-media">${img ? `<img src="${img}" alt="" loading="lazy">` : ''}</div>
+            <div class="selected-body">
+              <div class="selected-head">
+                <div>
+                  <span class="selected-index">${String(i + 1).padStart(2, '0')}</span>
+                  <strong>${name}</strong>
+                  ${qty > 1 ? `<span class="item-qty">× ${qty}</span>` : ''}
+                </div>
+                <button type="button" class="selected-remove" data-remove="${name}" aria-label="Remove ${name}">
+                  <svg class="icon" aria-hidden="true"><use href="#i-close"/></svg>
+                </button>
+              </div>
+              <small>${a ? a[3] : ''}${a && a[3] ? ' · ' : ''}${a ? a[2] : ''}</small>
+              <div class="selected-when">
+                <label>
+                  <span>Preferred date</span>
+                  <input type="date" data-sched="date" data-for="${name}" value="${sc.date || ''}">
+                </label>
+                <label>
+                  <span>Preferred time</span>
+                  <select data-sched="time" data-for="${name}">
+                    <option value="">Any time</option>
+                    <option${sc.time === 'Early morning' ? ' selected' : ''}>Early morning</option>
+                    <option${sc.time === 'Morning' ? ' selected' : ''}>Morning</option>
+                    <option${sc.time === 'Midday' ? ' selected' : ''}>Midday</option>
+                    <option${sc.time === 'Afternoon' ? ' selected' : ''}>Afternoon</option>
+                    <option${sc.time === 'Sunset' ? ' selected' : ''}>Sunset</option>
+                    <option${sc.time === 'Evening' ? ' selected' : ''}>Evening</option>
+                  </select>
+                </label>
+              </div>
             </div>
-            <button type="button" data-remove="${name}" aria-label="Remove ${name}">Remove</button>
-          </div>`;
+          </article>`;
         }).join('')
-      : '<p class="empty-selection">No experiences selected yet. <a href="activities.html" style="color:var(--petrol);font-weight:600;text-decoration:underline">Browse activities</a> and add what calls to you.</p>';
+      : `<div class="empty-selection">
+           <p><strong>Nothing chosen yet.</strong></p>
+           <p>Pick the experiences you want and they will appear here, ready to schedule.</p>
+           <a class="button button-light" href="activities.html">Browse experiences</a>
+         </div>`;
 
     itineraryList.querySelectorAll('[data-remove]').forEach(btn =>
       btn.addEventListener('click', () => {
-        const sels = getSelections();
-        delete sels[btn.dataset.remove];
-        setSelections(sels);
+        const s2 = getSelections();
+        delete s2[btn.dataset.remove];
+        setSelections(s2);
+        const sc2 = getSchedule();
+        delete sc2[btn.dataset.remove];
+        setSchedule(sc2);
         draw();
       })
     );
+
+    itineraryList.querySelectorAll('[data-sched]').forEach(input =>
+      input.addEventListener('change', () => {
+        setActivitySchedule(input.dataset.for, input.dataset.sched, input.value);
+        const p2 = document.querySelector('#schedule-progress');
+        if (p2) {
+          const sc3 = getSchedule();
+          const done = Object.keys(getSelections()).filter(n => sc3[n] && sc3[n].date).length;
+          p2.textContent = `${done} of ${Object.keys(getSelections()).length} scheduled`;
+        }
+      })
+    );
+
+    applyDateBounds();
+    if (window.applySquircles) window.applySquircles();
   };
 
   draw();
+  [arrival, departure].forEach(d => d.addEventListener('change', applyDateBounds));
 
   document.querySelector('#itinerary-form').addEventListener('submit', event => {
     event.preventDefault();
+
     localStorage.setItem('lainaDates', JSON.stringify({ arrival: arrival.value, departure: departure.value }));
+    localStorage.setItem('lainaTravellerCounts', JSON.stringify({ adults: adultSel.value, children: childSel.value }));
+
     const sels  = getSelections();
+    const sched = getSchedule();
     const names = Object.keys(sels);
-    const activityLines = names.length
-      ? names.map(name => sels[name] > 1 ? `${name} x${sels[name]}` : name).join(', ')
+
+    /* One line per experience, with its own date and time, so the
+       message reads as a schedule rather than a list of names. */
+    const lines = names.length
+      ? names.map((name, i) => {
+          const qty = sels[name];
+          const sc  = sched[name] || {};
+          const when = [sc.date ? prettyDate(sc.date) : null, sc.time || null]
+            .filter(Boolean).join(', ');
+          return `${i + 1}. ${name}${qty > 1 ? ` x${qty}` : ''}${when ? ` — ${when}` : ' — date to confirm'}`;
+        }).join('\n')
       : 'I need help choosing activities.';
-    const message = `Hello Laina Light Tours, I would like to confirm my itinerary. Arrival: ${arrival.value}. Departure: ${departure.value}. Adults: ${document.querySelector('#adult-count').value}. Children: ${document.querySelector('#child-count').value}. Activities: ${activityLines}`;
-    window.open(`https://wa.me/263771234567?text=${encodeURIComponent(message)}`, '_blank');
-    document.querySelector('#itinerary-success').textContent =
-      'Your itinerary is ready. WhatsApp will open with your selections for final confirmation.';
+
+    const message =
+      `Hello Laina Light Tours, here are my trip details.\n\n` +
+      `Arrival: ${arrival.value ? prettyDate(arrival.value) : 'to confirm'}\n` +
+      `Departure: ${departure.value ? prettyDate(departure.value) : 'to confirm'}\n` +
+      `Travellers: ${adultSel.value} adult(s), ${childSel.value} child(ren)\n\n` +
+      `Experiences (${names.reduce((s, n) => s + sels[n], 0)}):\n${lines}\n\n` +
+      `Please confirm availability and the final quote.`;
+
+    window.open(waLink(message), '_blank');
+
+    const ok = document.querySelector('#itinerary-success');
+    if (ok) {
+      ok.hidden = false;
+      ok.innerHTML =
+        '<strong>Sent to WhatsApp.</strong> Your experiences and preferred times have been passed to the team. ' +
+        'They will confirm availability and send the final quote — nothing is booked until they reply.';
+    }
   });
 }
 
