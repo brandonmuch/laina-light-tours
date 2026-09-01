@@ -247,22 +247,28 @@ const search   = document.querySelector('#activity-search');
 const category = document.querySelector('#category-filter');
 const count    = document.querySelector('#result-count');
 
-function renderActivities() {
-  if (!grid) return;
-  const term   = (search?.value || '').toLowerCase();
-  const filter = category?.value || 'All categories';
-  const sels   = getSelections();
-  const visible = activities.filter(a =>
-    (filter === 'All categories' || a[1] === filter) &&
-    a[0].toLowerCase().includes(term)
-  );
-  count.textContent = visible.length;
+/* Forty-six cards in one wall is a lot to take in, so the catalogue
+   is grouped by theme with a heading and a count for each. When a
+   search term or a category filter is active the grouping is
+   dropped and the matches are shown as one flat list, because at
+   that point the visitor already knows what they are looking for. */
+const CATEGORY_ORDER = ['Flights', 'Safari', 'Cruises', 'Adrenaline', 'Water', 'Culture', 'Transfers'];
 
-  grid.innerHTML = visible.map((a, i) => {
-    const qty = sels[a[0]] || 0;
-    const activeClass = qty > 0 ? ' is-active' : '';
-    const delay = Math.min(i, 9) * 55;
-    return `<article class="activity-card" data-name="${a[0]}" data-category="${a[1]}" style="animation-delay:${delay}ms">
+const CATEGORY_BLURB = {
+  Flights:    'See the full width of the Falls from the air.',
+  Safari:     'Wildlife in Zambezi, Chobe and Hwange.',
+  Cruises:    'The river at sunrise, sunset and after dark.',
+  Adrenaline: 'The bridge, the gorge and the drop.',
+  Water:      'In the rapids, over the gorge, through the canopy.',
+  Culture:    'Food, performance and the communities around the Falls.',
+  Transfers:  'Getting there, and back again.'
+};
+
+function activityCard(a, sels, i) {
+  const qty = sels[a[0]] || 0;
+  const activeClass = qty > 0 ? ' is-active' : '';
+  const delay = Math.min(i, 9) * 55;
+  return `<article class="activity-card" data-name="${a[0]}" data-category="${a[1]}" style="animation-delay:${delay}ms">
       <div class="activity-card-image">
         <img src="${a[5]}" alt="${a[0]}">
         <span class="activity-category">${a[1]}</span>
@@ -274,14 +280,57 @@ function renderActivities() {
           ${renderPrice(a)}
           <span class="activity-duration">${a[3]}</span>
           <div class="qty-control${activeClass}" data-name="${a[0]}">
-            <button class="qty-btn qty-dec" aria-label="Remove one ${a[0]}" ${qty === 0 ? 'disabled' : ''}>−</button>
+            <button class="qty-btn qty-dec" aria-label="Remove one ${a[0]}" ${qty === 0 ? 'disabled' : ''}>\u2212</button>
             <span class="qty-val">${qty}</span>
             <button class="qty-btn qty-inc" aria-label="Add ${a[0]} to itinerary">+</button>
           </div>
         </div>
       </div>
     </article>`;
-  }).join('');
+}
+
+function renderActivities() {
+  if (!grid) return;
+  const term   = (search?.value || '').toLowerCase();
+  const filter = category?.value || 'All categories';
+  const sels   = getSelections();
+
+  const visible = activities.filter(a =>
+    (filter === 'All categories' || a[1] === filter) &&
+    (a[0].toLowerCase().includes(term) || a[4].toLowerCase().includes(term))
+  );
+  count.textContent = visible.length;
+
+  const grouped = !term && filter === 'All categories';
+
+  if (!grouped) {
+    grid.className = 'activity-grid';
+    grid.innerHTML = visible.length
+      ? visible.map((a, i) => activityCard(a, sels, i)).join('')
+      : `<p class="no-results">Nothing matches that yet. Try a different word, or <button type="button" class="link-reset" id="clear-filters">clear the filters</button>.</p>`;
+  } else {
+    grid.className = 'activity-groups';
+    const order = CATEGORY_ORDER.filter(c => visible.some(a => a[1] === c))
+      .concat([...new Set(visible.map(a => a[1]))].filter(c => !CATEGORY_ORDER.includes(c)));
+
+    grid.innerHTML = order.map(cat => {
+      const items = visible.filter(a => a[1] === cat);
+      return `<section class="activity-group" aria-labelledby="group-${cat}">
+        <div class="group-head">
+          <h3 id="group-${cat}">${cat}<span class="group-count">${items.length}</span></h3>
+          <p>${CATEGORY_BLURB[cat] || ''}</p>
+        </div>
+        <div class="activity-grid">${items.map((a, i) => activityCard(a, sels, i)).join('')}</div>
+      </section>`;
+    }).join('');
+  }
+
+  const clear = document.querySelector('#clear-filters');
+  if (clear) clear.addEventListener('click', () => {
+    if (search) search.value = '';
+    if (category) category.value = 'All categories';
+    renderActivities();
+  });
 
   if (window.applySquircles) window.applySquircles();
 
@@ -301,25 +350,25 @@ function renderActivities() {
 
     incBtn.addEventListener('click', e => {
       e.stopPropagation();
-      const sels = getSelections();
-      sels[name] = (sels[name] || 0) + 1;
-      setSelections(sels);
-      valEl.textContent = sels[name];
+      const s2 = getSelections();
+      s2[name] = (s2[name] || 0) + 1;
+      setSelections(s2);
+      valEl.textContent = s2[name];
       decBtn.disabled = false;
       control.classList.add('is-active');
     });
 
     decBtn.addEventListener('click', e => {
       e.stopPropagation();
-      const sels = getSelections();
-      sels[name] = Math.max(0, (sels[name] || 0) - 1);
-      if (sels[name] === 0) {
-        delete sels[name];
+      const s2 = getSelections();
+      s2[name] = Math.max(0, (s2[name] || 0) - 1);
+      if (s2[name] === 0) {
+        delete s2[name];
         control.classList.remove('is-active');
         decBtn.disabled = true;
       }
-      setSelections(sels);
-      valEl.textContent = sels[name] || 0;
+      setSelections(s2);
+      valEl.textContent = s2[name] || 0;
     });
   });
 }

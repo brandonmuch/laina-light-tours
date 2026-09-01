@@ -2938,9 +2938,11 @@ h2 { max-width: 24ch; }
    ============================================================ */
 
 :root {
-  --lift-1: 0 1px 2px rgba(26,25,25,.05), 0 4px 12px rgba(26,25,25,.07);
-  --lift-2: 0 2px 4px rgba(26,25,25,.06), 0 10px 26px rgba(26,25,25,.11);
-  --lift-3: 0 3px 6px rgba(26,25,25,.07), 0 18px 40px rgba(26,25,25,.15);
+  /* Strong enough to read as lift under a dark image card, still
+     tinted to the page rather than pure black. */
+  --lift-1: 0 2px 4px rgba(26,25,25,.10), 0 10px 24px rgba(26,25,25,.14);
+  --lift-2: 0 3px 8px rgba(26,25,25,.12), 0 16px 36px rgba(26,25,25,.18);
+  --lift-3: 0 6px 14px rgba(26,25,25,.16), 0 28px 56px rgba(26,25,25,.26);
 }
 
 .package-card,
@@ -2993,3 +2995,943 @@ h2 { max-width: 24ch; }
   .pkg-card:hover, .feature-card:hover, .route-card:hover,
   .transfer-features article:hover, .contact-method:hover { transform: none; }
 }
+
+/* ============================================================
+   HEADER ORDER — extend to the nav breakpoint
+   The ordering block stopped at 900px while the hamburger appears
+   from 980px, so between those widths the toggle had no order value
+   and defaulted to 0, landing left of the logo on tablets.
+   ============================================================ */
+
+@media (max-width: 980px) {
+  .site-header { display: flex; align-items: center; gap: var(--s-2); }
+  .brand       { order: 1; margin-right: auto; }
+  .header-cart { order: 2; }
+  .header-cta  { order: 3; }
+  .menu-toggle { order: 4; margin-left: var(--s-2); }
+  .main-nav    { order: 5; }
+}
+
+/* ============================================================
+   AMBER TEXT ON BLUE — white, regular weight, sitewide
+   Icons keep the amber; only the type changes.
+   ============================================================ */
+
+.build-copy .eyebrow,
+.build-count span,
+.credential em,
+.credential span,
+.pkg-cta .eyebrow,
+.catalog-cta .eyebrow,
+.group-enquiry .eyebrow,
+.route-label,
+.package-card .package-days,
+.itinerary-guide .eyebrow,
+.customizer-section .eyebrow,
+.transfer-cta .eyebrow,
+.contact-section .eyebrow,
+.home-transfers .eyebrow,
+.hero-kicker {
+  color: #fff !important;
+  font-weight: 400 !important;
+  text-transform: none !important;
+  letter-spacing: normal !important;
+}
+
+/* Keep them slightly recessed so they still read as supporting text. */
+.build-copy .eyebrow,
+.pkg-cta .eyebrow,
+.catalog-cta .eyebrow,
+.group-enquiry .eyebrow,
+.route-label,
+.package-card .package-days,
+.transfer-cta .eyebrow { color: rgba(255,255,255,.82) !important; }
+
+.transfer-cta .eyebrow { color: var(--ink-3) !important; }   /* light panel */
+.transfer-price strong { color: var(--ink) !important; }
+
+/* ============================================================
+   PICK CARDS — lighter, less bulk
+   The price row was wrapping "per person" and the duration onto
+   two lines each, and a full-width button added a whole extra
+   band. One line for price and duration, and the action is a text
+   link with an arrow rather than a slab.
+   ============================================================ */
+
+.pick-body { padding: var(--s-4); gap: 10px; }
+.pick-body h3 { font-size: var(--t-md); line-height: 1.3 !important; }
+.pick-body p {
+  font-size: var(--t-sm);
+  line-height: 1.5;
+  color: var(--ink-3);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex: 0 0 auto;
+}
+
+.pick-foot {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-start;
+  gap: 10px;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--line-soft);
+}
+.pick-price { display: flex; align-items: baseline; gap: 5px; flex: none; }
+.pick-price strong { font-size: 26px; }
+.pick-price span { font-size: var(--t-micro); color: var(--ink-3); }
+
+.pick-dur {
+  margin-left: auto;
+  flex: none;
+  font-size: var(--t-micro);
+  color: var(--ink-3);
+  gap: 5px;
+}
+.pick-dur .icon { font-size: 13px; }
+
+/* The action is a link, not a block. */
+.pick-cta {
+  width: auto;
+  align-self: flex-start;
+  justify-content: flex-start;
+  padding: 0;
+  background: none !important;
+  color: var(--petrol) !important;
+  font-size: var(--t-sm);
+  font-weight: 600;
+  border-radius: 0;
+  box-shadow: none !important;
+  gap: 6px;
+}
+.pick-cta:hover { background: none !important; color: var(--petrol-deep) !important; text-decoration: underline; }
+.pick-cta .icon { stroke: currentColor !important; font-size: 15px; }
+
+.pick-media { aspect-ratio: 16 / 10; }
+.pick-tag { padding: 5px 11px; font-size: var(--t-micro); font-weight: 600; }
+
+@media (max-width: 420px) {
+  .pick-foot { flex-wrap: wrap; white-space: normal; }
+  .pick-dur { margin-left: 0; }
+}
+
+/* Image cards are dark, so they need the shadow to read against
+   white. Applied to the card itself, and the grid must not clip it. */
+.package-grid, .activity-grid, .pick-grid, .pkg-grid,
+.feature-grid, .route-grid, .fleet-grid,
+.packages-section, .discover, .catalog { overflow: visible; }
+
+.package-card, .activity-card, .feature-card, .pick-card, .pkg-card {
+  box-shadow: var(--lift-1) !important;
+}
+.package-card:hover, .activity-card:hover, .feature-card:hover,
+.pick-card:hover, .pkg-card:hover {
+  box-shadow: var(--lift-3) !important;
+}
+
+/* ============================================================
+   CARD CORNERS — one clip, one curve
+   The card is clipped with corner-shape: squircle while its child
+   image carried a plain border-radius. A squircle and a circular
+   arc do not follow the same path, so the card's own background
+   showed through the difference as a grey wedge in each corner.
+   Only the card clips now; children carry no radius at all.
+   ============================================================ */
+
+.package-card,
+.activity-card,
+.pick-card,
+.pkg-card,
+.feature-card {
+  overflow: hidden;
+  background: var(--charcoal);      /* any sub-pixel sliver reads as
+                                       part of the photograph, not grey */
+  border: 0 !important;
+}
+
+.package-card > *, .package-card img,
+.activity-card > *, .activity-card img,
+.pick-card .pick-media, .pick-card .pick-media img,
+.pkg-card .pkg-media, .pkg-card .pkg-media img,
+.feature-card > *, .feature-card img {
+  border-radius: 0 !important;
+}
+
+/* The body panels on light cards keep the page colour. */
+.pick-card, .pkg-card { background: var(--surface); }
+.pick-card .pick-body, .pkg-card .pkg-body { background: var(--surface); }
+
+/* ============================================================
+   ARROWS — one colour, everywhere, at every size
+   ============================================================ */
+
+.circle-arrow,
+.package-card .circle-arrow,
+.feature-card .circle-arrow,
+.activity-card .circle-arrow,
+.package-card:hover .circle-arrow,
+.feature-card:hover .circle-arrow,
+.activity-card:hover .circle-arrow {
+  background: var(--petrol) !important;
+  color: #fff !important;
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px;
+  border-radius: 50% !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,.28);
+}
+.circle-arrow .icon,
+.package-card:hover .circle-arrow .icon,
+.feature-card:hover .circle-arrow .icon,
+.activity-card:hover .circle-arrow .icon {
+  stroke: #fff !important;
+  font-size: 16px !important;
+  width: 1em !important;
+  height: 1em !important;
+}
+
+/* Hover reads as movement, not a colour change. */
+.package-card:hover .circle-arrow,
+.feature-card:hover .circle-arrow { transform: translate(2px,-2px); }
+
+@media (max-width: 560px) {
+  .circle-arrow { width: 36px !important; height: 36px !important; }
+  .circle-arrow .icon { font-size: 15px !important; }
+}
+
+/* Titles wrap to different depths, so the copy takes the slack and
+   every footer lands on the same line across the row. */
+.pick-body { display: flex; flex-direction: column; }
+.pick-body h3 { min-height: 2.6em; display: flex; align-items: flex-start; }
+.pick-body p { flex: 1 1 auto; }
+.pick-foot { margin-top: auto; }
+@media (max-width: 900px) {
+  .pick-body h3 { min-height: 0; }
+}
+
+/* ============================================================
+   DESKTOP HEADER — brand left, nav centred, action far right
+   A three-track grid with equal outer columns keeps the nav
+   optically centred regardless of how wide the brand or the
+   button happen to be. Smaller screens keep the flex row.
+   ============================================================ */
+
+@media (min-width: 981px) {
+  .site-header {
+    display: grid !important;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: var(--s-5);
+    padding-inline: clamp(24px, 4vw, 56px);
+  }
+
+  .brand       { grid-column: 1; justify-self: start; margin-right: 0; }
+  .main-nav    { grid-column: 2; justify-self: center; display: flex !important; gap: clamp(20px, 2.4vw, 38px); }
+  .header-cart { grid-column: 3; justify-self: end; }
+  .header-cta  { grid-column: 3; justify-self: end; }
+  .menu-toggle { display: none !important; }
+
+  .main-nav a { white-space: nowrap; }
+}
+
+/* nav.css colours the nav white for .hero-header, from when the
+   header sat transparently over the hero image. The header is solid
+   white now, so those links were white on white. */
+.site-header .main-nav a,
+.site-header.hero-header .main-nav a,
+.site-header.scrolled .main-nav a {
+  color: var(--ink-2) !important;
+  font-size: 14px;
+  font-weight: 500;
+}
+.site-header .main-nav a:hover,
+.site-header.hero-header .main-nav a:hover,
+.site-header.scrolled .main-nav a:hover { color: var(--ink) !important; }
+.site-header .main-nav a.active,
+.site-header.hero-header .main-nav a.active {
+  color: var(--ink) !important;
+  border-bottom: 2px solid var(--petrol);
+  padding-bottom: 6px;
+}
+.site-header .brand span, .site-header.hero-header .brand span { color: var(--ink) !important; }
+.menu-toggle, .site-header.hero-header .menu-toggle { color: var(--ink) !important; }
+
+.site-header { min-height: 72px; }
+
+/* ============================================================
+   BUTTONS HUG — the ratio formula, not full-width slabs
+   Forcing width:100% inside the CTA panel produced 600px-wide
+   buttons around 20 characters of label. Padding sets the size.
+   ============================================================ */
+
+.build-actions .button,
+.build-actions .button-light,
+.build-actions .button-dark,
+.build-secondary {
+  width: auto !important;
+  justify-self: start;
+  justify-content: center;
+  font-size: 16px;
+  line-height: 1;
+  padding: 12px 30px;          /* 40px tall */
+}
+.build-actions { justify-items: start; }
+
+/* Only a form submit or a genuinely full-width mobile action fills
+   its container. */
+@media (max-width: 560px) {
+  .build-actions .button { width: 100% !important; justify-self: stretch; }
+}
+
+/* ============================================================
+   BUTTON HEIGHT — deterministic, not padding-derived
+   Vertical padding alone left the height at the mercy of the
+   tallest inline child (the icon, the count badge), so buttons
+   drifted to 50px. Fixing the height locks the ratio:
+     small 32px / default 40px / large 48px
+   with horizontal padding still doing the breathing room.
+   ============================================================ */
+
+.button, .header-cta, .button-light, .button-dark, .build-secondary {
+  height: 40px;
+  padding: 0 30px;
+  font-size: 16px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-sizing: border-box;
+}
+
+.button-sm, .header-cart { height: 32px; padding: 0 20px; font-size: 14px; }
+.button-lg { height: 48px; padding: 0 40px; font-size: 18px; }
+
+.build-actions .button,
+.build-actions .button-light,
+.build-actions .button-dark,
+.build-secondary { height: 40px; padding: 0 30px; }
+
+.booking-form button[type="submit"] { height: 44px; padding: 0 32px; }
+#add-itinerary, .itinerary-submit .button { height: 44px; padding: 0 32px; }
+
+/* Children must not push the box taller than the fixed height. */
+.button .icon, .header-cta .icon, .header-cart .icon {
+  width: 1em; height: 1em; font-size: 1em; flex: none;
+}
+.btn-count { height: 20px; min-width: 20px; padding: 0 6px; font-size: 12px; }
+
+@media (max-width: 560px) {
+  .build-actions .button { width: 100% !important; }
+}
+
+/* ============================================================
+   BUTTON SCALE — authoritative
+   Selectors like .hero .button-light and .transfer-cta .button
+   outrank a plain .button, and several of my own earlier blocks
+   set competing padding. This is the single source of truth for
+   button geometry; colour still comes from the variant rules.
+   ============================================================ */
+
+.button,
+.header-cta,
+.button-light,
+.button-dark,
+.build-secondary,
+.hero .button-light,
+.hero .button,
+.home-transfers-copy .button,
+.split-copy .button,
+.transfer-cta .button,
+.group-enquiry .button,
+.pkg-cta .button,
+.catalog-cta .button,
+.build-actions .button,
+.talk-band .button,
+.empty-selection .button {
+  height: 40px !important;
+  min-height: 40px !important;
+  padding: 0 30px !important;
+  font-size: 16px !important;
+  line-height: 1 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  box-sizing: border-box !important;
+  width: auto !important;
+}
+
+.header-cart, .button-sm {
+  height: 34px !important;
+  min-height: 34px !important;
+  padding: 0 20px !important;
+  font-size: 14px !important;
+}
+
+.button-lg {
+  height: 48px !important;
+  padding: 0 40px !important;
+  font-size: 18px !important;
+}
+
+/* Form submits are the one place a taller, wider target is right. */
+.booking-form button[type="submit"],
+#add-itinerary,
+.itinerary-submit .button {
+  height: 44px !important;
+  padding: 0 32px !important;
+}
+#add-itinerary { width: 100% !important; }
+
+.button .icon, .header-cta .icon, .header-cart .icon, .button-wa .icon {
+  width: 16px !important; height: 16px !important; font-size: 16px !important; flex: none;
+}
+.btn-count { height: 20px !important; min-width: 20px; padding: 0 6px !important; font-size: 12px !important; }
+
+@media (max-width: 560px) {
+  .build-actions .button, .hero-actions .button { width: 100% !important; }
+}
+
+/* ============================================================
+   SECTION RHYTHM
+   Gaps between bands were running 92, 110, 136, 156, 116, 156px
+   because each section carried its own legacy margin. One value
+   governs the whole page.
+   ============================================================ */
+
+:root { --band: 88px; --band-sm: 56px; }
+
+main > section {
+  margin-top: 0;
+  margin-bottom: var(--band);
+}
+main > section:last-child { margin-bottom: var(--band); }
+
+.credentials, .benefits-bar, .build-cta, .talk-band,
+.home-transfers, .contact-section, .packages-section,
+.discover, .split-section, .booking-wrap {
+  margin-bottom: var(--band) !important;
+}
+
+/* These carry their own internal padding already, so they do not
+   also need a top margin. */
+.credentials  { padding-block: var(--s-7); }
+.benefits-bar { padding-block: var(--s-7); }
+
+.section { padding-block: 0; }
+.section + .section { padding-top: 0; }
+
+@media (max-width: 760px) {
+  main > section,
+  .credentials, .benefits-bar, .build-cta, .talk-band,
+  .home-transfers, .contact-section, .packages-section,
+  .discover, .split-section, .booking-wrap {
+    margin-bottom: var(--band-sm) !important;
+  }
+}
+
+/* ============================================================
+   ACTIVITY MODAL — rebuilt
+   The image was bleeding past the rounded top corners, and the
+   action button ran edge to edge because it was both padded by the
+   generic child rule and forced to 100% width.
+   ============================================================ */
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: none;
+  place-items: center;
+  padding: var(--s-5);
+  background: rgba(18,18,16,.60);
+  overflow-y: auto;
+}
+.modal.open { display: grid; }
+
+.modal-card {
+  position: relative;
+  width: min(520px, 100%);
+  max-height: min(88vh, 760px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;              /* clips the image to the corners */
+  background: var(--surface);
+  border-radius: var(--r-lg);
+  padding: 0;
+  box-shadow: var(--lift-3);
+}
+@supports (corner-shape: squircle) { .modal-card { corner-shape: squircle; } }
+
+/* Reset the blanket child padding; each part sets its own. */
+.modal-card > * { padding-inline: 0; }
+
+#modal-image {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  display: block;
+  flex: none;
+  border-radius: 0;
+  margin: 0;
+}
+
+.modal-body {
+  padding: var(--s-5);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Until the markup is wrapped, style the parts directly. */
+.modal-card #modal-category { margin: var(--s-5) var(--s-5) 0; padding: 0; }
+.modal-card #modal-title    { margin: 4px var(--s-5) 0; padding: 0; font-size: var(--t-xl); max-width: 100%; }
+.modal-card #modal-description { margin: 10px var(--s-5) 0; padding: 0; font-size: var(--t-sm); line-height: 1.55; color: var(--ink-3); }
+.modal-card .modal-meta {
+  margin: var(--s-4) var(--s-5) 0;
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--line-soft);
+  display: flex; align-items: baseline; gap: 10px;
+}
+.modal-card .modal-meta strong { font-size: 26px; font-weight: 700; color: var(--ink); line-height: 1; }
+.modal-card .modal-meta span { font-size: var(--t-sm); color: var(--ink-3); }
+
+.modal-card #add-itinerary {
+  margin: var(--s-4) var(--s-5) var(--s-5);
+  width: calc(100% - (var(--s-5) * 2)) !important;
+  height: 44px !important;
+  padding: 0 24px !important;
+}
+
+.modal-close {
+  position: absolute;
+  top: 12px; right: 12px;
+  z-index: 3;
+  width: 34px; height: 34px;
+  display: grid; place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255,255,255,.95);
+  color: var(--charcoal);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,.2);
+}
+.modal-close:hover { background: #fff; }
+.modal-close .icon { width: 15px; height: 15px; font-size: 15px; stroke: var(--charcoal); }
+
+@media (max-width: 560px) {
+  .modal { padding: 0; align-items: end; }
+  .modal-card {
+    width: 100%;
+    max-height: 90vh;
+    border-radius: var(--r-lg) var(--r-lg) 0 0;
+  }
+  .modal-card #modal-image { aspect-ratio: 16 / 9; }
+  .modal-card #modal-title { font-size: var(--t-lg); }
+}
+
+/* ============================================================
+   ACTIVITY CARD FOOTER — rebuilt
+   Price, duration and counter were fighting for one cramped line.
+   Two clear rows: the price on its own, then the duration and the
+   counter facing each other.
+   ============================================================ */
+
+.activity-card .activity-details {
+  padding: var(--s-5);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.activity-card .activity-details h3 {
+  font-size: var(--t-md);
+  line-height: 1.3 !important;
+  margin: 0;
+  max-width: 100%;
+}
+.activity-card .activity-details > p {
+  font-size: var(--t-sm);
+  line-height: 1.45;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.activity-card .activity-bottom {
+  display: grid !important;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "price price"
+    "meta  qty";
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+  padding-top: var(--s-3);
+  border-top: 1px solid rgba(255,255,255,.28);
+}
+.activity-card .price-block { grid-area: price; }
+.activity-card .price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  white-space: nowrap;
+}
+.activity-card .price-row strong { font-size: 26px !important; line-height: 1; }
+.activity-card .price-row span { font-size: var(--t-micro); }
+.activity-card .price-note { font-size: var(--t-micro); }
+
+.activity-card .activity-duration {
+  grid-area: meta;
+  justify-self: start;
+  font-size: var(--t-micro);
+  white-space: nowrap;
+}
+.activity-card .qty-control {
+  grid-area: qty;
+  justify-self: end;
+  margin-left: 0;
+  width: auto;
+  padding: 3px;
+  gap: 2px;
+}
+.activity-card .qty-btn { width: 30px !important; height: 30px !important; font-size: 17px; }
+.activity-card .qty-val { min-width: 26px; font-size: var(--t-sm); }
+
+/* At narrow widths the counter takes its own full-width row so the
+   targets stay comfortable. */
+@media (max-width: 520px) {
+  .activity-card .activity-bottom {
+    grid-template-columns: 1fr;
+    grid-template-areas: "price" "meta" "qty";
+    gap: var(--s-3);
+  }
+  .activity-card .qty-control { justify-self: stretch; width: 100%; justify-content: space-between; }
+  .activity-card .qty-btn { width: 36px !important; height: 36px !important; }
+}
+
+/* ============================================================
+   ACTIVITY GROUPS — themed sections instead of one wall of 46
+   ============================================================ */
+
+.activity-groups { display: grid; gap: var(--s-9); }
+
+.activity-group { scroll-margin-top: 100px; }
+
+.group-head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-4);
+  flex-wrap: wrap;
+  padding-bottom: var(--s-3);
+  margin-bottom: var(--s-5);
+  border-bottom: 1px solid var(--line-soft);
+}
+.group-head h3 {
+  display: flex; align-items: center; gap: 10px;
+  margin: 0;
+  font-size: var(--t-lg);
+  max-width: 100%;
+}
+.group-count {
+  display: inline-grid; place-items: center;
+  min-width: 24px; height: 24px; padding: 0 8px;
+  border-radius: var(--r-pill);
+  background: var(--surface-2);
+  color: var(--ink-3);
+  font-size: var(--t-micro);
+  font-weight: 700;
+}
+.group-head p { margin: 0; font-size: var(--t-sm); color: var(--ink-3); }
+
+.no-results { padding: var(--s-8) 0; text-align: center; color: var(--ink-3); }
+.link-reset {
+  background: none; border: 0; padding: 0;
+  color: var(--petrol); font: inherit; font-weight: 600;
+  text-decoration: underline; cursor: pointer;
+}
+
+/* ============================================================
+   ABOUT PAGE
+   The intro was a 1100px grid inside a wider page, so it read as a
+   narrow column stranded in white space, and the closing band was
+   near-black rather than brand petrol.
+   ============================================================ */
+
+.about-intro, .about-values {
+  max-width: var(--shell) !important;
+  margin: 0 auto var(--band) !important;
+  padding: 0 clamp(24px,5vw,48px) !important;
+  gap: clamp(32px,5vw,72px) !important;
+}
+
+.about-intro {
+  display: grid !important;
+  grid-template-columns: 1fr 1.1fr !important;
+  align-items: start;
+}
+.about-intro .eyebrow { grid-column: 1; margin: 0 0 var(--s-2); }
+.about-intro h2 {
+  grid-column: 1;
+  grid-row: 2;
+  margin: 0;
+  font-size: clamp(30px,3.6vw,44px);
+  max-width: 14ch;
+}
+.about-intro__body {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  display: grid;
+  gap: var(--s-4);
+  align-self: center;
+}
+.about-intro__body p {
+  font-size: var(--t-md) !important;
+  line-height: 1.7 !important;
+  color: var(--ink-2) !important;
+  max-width: 46ch;
+  margin: 0;
+}
+
+@media (max-width: 860px) {
+  .about-intro { grid-template-columns: 1fr !important; }
+  .about-intro .eyebrow, .about-intro h2, .about-intro__body {
+    grid-column: 1; grid-row: auto;
+  }
+  .about-intro h2 { max-width: 100%; }
+}
+
+.about-image {
+  max-width: var(--shell);
+  margin: 0 auto var(--band);
+  padding-inline: clamp(24px,5vw,48px);
+}
+.about-image img {
+  width: 100%;
+  aspect-ratio: 21 / 9;
+  object-fit: cover;
+  display: block;
+  border-radius: var(--r-lg);
+  box-shadow: var(--lift-1);
+}
+@supports (corner-shape: squircle) { .about-image img { corner-shape: squircle; } }
+
+.about-values__head { margin-bottom: var(--s-5); }
+.about-values__head h2 { font-size: clamp(28px,3.4vw,40px); max-width: 18ch; }
+
+.values-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--s-4);
+}
+@media (max-width: 860px) { .values-grid { grid-template-columns: 1fr; } }
+
+.values-grid > * {
+  padding: var(--s-5);
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r-lg);
+  box-shadow: var(--lift-1);
+}
+@supports (corner-shape: squircle) { .values-grid > * { corner-shape: squircle; } }
+.values-grid h3 { margin: 0 0 6px; font-size: var(--t-md); max-width: 100%; }
+.values-grid p { margin: 0; font-size: var(--t-sm) !important; line-height: 1.55 !important; color: var(--ink-3) !important; }
+
+/* Closing band: brand petrol, not near-black. */
+.about-cta, .story-band.about-cta, .about-page .about-cta {
+  background: var(--petrol) !important;
+  color: #fff !important;
+  max-width: var(--shell);
+  margin: 0 auto var(--band);
+  padding: clamp(40px,6vw,72px) clamp(24px,5vw,56px) !important;
+  border-radius: var(--r-xl);
+  text-align: center;
+  display: grid;
+  justify-items: center;
+  gap: var(--s-3);
+}
+@supports (corner-shape: squircle) { .about-cta { corner-shape: squircle; } }
+.about-cta h2 { color: #fff !important; font-size: clamp(28px,3.6vw,44px); margin: 0; max-width: 16ch; }
+.about-cta p { color: rgba(255,255,255,.85) !important; max-width: 46ch; margin: 0; }
+.about-cta .button { background: #fff !important; color: var(--petrol) !important; }
+.about-cta .button .icon { stroke: var(--petrol) !important; }
+
+/* Footer logo, larger, with room around it. */
+.site-footer .footer-brand::before {
+  background-image: url('logo-dark-bg.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: left center;
+  width: 300px !important;
+  height: 92px !important;
+  border-radius: 0;
+  margin-bottom: var(--s-2);
+}
+.site-footer .footer-brand { max-width: 340px; }
+
+@media (max-width: 700px) {
+  .site-footer .footer-brand::before { width: 230px !important; height: 70px !important; }
+}
+
+/* Contact details in the footer are already obviously links in
+   context; the underline was only needed where a link sits inside a
+   running sentence. */
+.site-footer .footer-column a[href^="mailto:"],
+.site-footer .footer-column a[href^="tel:"],
+.site-footer a { text-decoration: none; }
+.site-footer a:hover { text-decoration: none; color: var(--amber); }
+.footer-legal a { text-decoration: none; }
+.footer-legal a:hover { text-decoration: underline; }
+
+/* transfers.css sets this eyebrow on a light panel where the amber
+   fails AA. */
+.transfer-intro .eyebrow { color: var(--ink-3) !important; }
+
+/* ============================================================
+   TRANSFER INTRO — balanced two-column
+   Heading and copy were sitting on different baselines in a 1100px
+   grid inside a wider page, the same imbalance as the about intro.
+   ============================================================ */
+
+.transfer-intro {
+  max-width: var(--shell) !important;
+  margin: 0 auto var(--band) !important;
+  padding: 0 clamp(24px,5vw,48px) !important;
+  display: grid !important;
+  grid-template-columns: 1fr 1.1fr !important;
+  gap: clamp(32px,5vw,72px) !important;
+  align-items: start !important;
+}
+.transfer-intro > div:first-child { align-self: start; }
+.transfer-intro h2 { margin: var(--s-2) 0 0; font-size: clamp(28px,3.4vw,42px); max-width: 14ch; }
+.transfer-intro > div:last-child { display: grid; gap: var(--s-4); align-self: center; }
+.transfer-intro p { margin: 0; font-size: var(--t-md); line-height: 1.7; color: var(--ink-2); max-width: 46ch; }
+
+@media (max-width: 860px) {
+  .transfer-intro { grid-template-columns: 1fr !important; }
+  .transfer-intro h2 { max-width: 100%; }
+}
+
+/* Routes heading row: the inline style on the section heading was
+   forcing a space-between row that broke at narrow widths. */
+.routes-section {
+  max-width: var(--shell);
+  margin: 0 auto var(--band);
+  padding-inline: clamp(24px,5vw,48px);
+}
+.routes-section .section-heading {
+  display: flex !important;
+  align-items: flex-end !important;
+  justify-content: space-between !important;
+  gap: var(--s-5) !important;
+  flex-wrap: wrap;
+  margin-bottom: var(--s-6) !important;
+}
+.routes-note { margin: 0; font-size: var(--t-sm); color: var(--ink-3); max-width: 36ch; }
+
+/* Hero copy and the price card should share a baseline. */
+.transfers-hero { align-items: center; }
+.transfers-hero-copy { display: grid; gap: var(--s-3); align-content: center; }
+.transfers-hero-copy h1 { margin: 0; }
+.transfers-hero-copy p { margin: 0; max-width: 46ch; }
+
+/* ============================================================
+   CONTACT METHOD CARDS — blue, white contents
+   ============================================================ */
+
+.contact-method {
+  background: var(--petrol) !important;
+  border: 1px solid var(--petrol) !important;
+  color: #fff !important;
+  padding: var(--s-4) var(--s-5);
+  border-radius: var(--r-md);
+  box-shadow: var(--lift-1) !important;
+}
+@supports (corner-shape: squircle) { .contact-method { corner-shape: squircle; } }
+
+.contact-method *,
+.contact-method strong,
+.contact-method span { color: #fff !important; }
+.contact-method span { color: rgba(255,255,255,.78) !important; font-weight: 400; }
+.contact-method .icon { color: #fff !important; stroke: #fff !important; }
+
+.contact-method:hover {
+  background: var(--petrol-deep) !important;
+  border-color: var(--petrol-deep) !important;
+  box-shadow: var(--lift-3) !important;
+  transform: translateX(4px);
+}
+
+/* The panel behind them stays light so the cards read as raised. */
+.contact-section { background: var(--surface) !important; }
+.contact-section h2, .contact-section h2 i { color: var(--ink) !important; }
+.contact-section > .contact-copy p { color: var(--ink-2) !important; }
+.contact-section .eyebrow { color: var(--ink-3) !important; }
+.contact-note { color: var(--ink-3) !important; }
+
+/* ============================================================
+   PACKAGE CARDS — uniform height, footers on one line
+   Titles wrap to different depths and the copy lengths differ, so
+   the cards were ending at different heights and the last card's
+   price was running past its bottom edge.
+   ============================================================ */
+
+.package-grid { align-items: stretch; }
+
+.package-card {
+  height: 100%;
+  min-height: 420px;
+  display: flex;
+  position: relative;
+}
+
+.package-card .package-card-body {
+  position: absolute;
+  inset: 0;
+  display: flex !important;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: var(--s-3);
+  padding: var(--s-5);
+}
+
+.package-card .package-label { align-self: flex-start; flex: none; }
+.package-card .package-content { flex: 0 1 auto; }
+.package-card .package-copy {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* The footer is pinned to the bottom of every card, so the price
+   rows line up across the row. */
+.package-card .package-footer {
+  margin-top: auto;
+  flex: none;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--s-3);
+  padding-top: var(--s-4);
+  border-top: 1px solid rgba(255,255,255,.28);
+}
+
+.package-card h3 {
+  font-size: clamp(20px, 2vw, 26px) !important;
+  line-height: 1.2 !important;
+  margin: 0;
+}
+.package-card .price-row strong { font-size: 26px !important; line-height: 1; }
+.package-card .price-row.is-child strong { font-size: 18px !important; }
+
+@media (max-width: 1100px) { .package-card { min-height: 400px; } }
+@media (max-width: 620px)  { .package-card { min-height: 360px; } }
