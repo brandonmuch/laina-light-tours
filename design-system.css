@@ -909,3 +909,299 @@ select:focus-visible, [tabindex]:focus-visible {
 @media (max-width: 560px) {
   .benefit-icon { width: 34px; height: 34px; font-size: 28px; }
 }
+
+/* ============================================================
+   FEATURE CARDS — restore the scrim
+   card-treatment.css only overlays .activity-card-image, never
+   .feature-card, so removing the one here left white copy sitting
+   on a bright sunset. Flat tint, no gradient: legibility comes
+   from the tint plus a shadow on the type, and the tint is kept
+   low enough that the photograph still carries the card.
+   ============================================================ */
+
+.feature-card { position: relative; isolation: isolate; }
+
+.feature-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: rgba(18,18,16,.40);
+  transition: background var(--dur-base) var(--ease-out);
+}
+.feature-card:hover::after { background: rgba(18,18,16,.30); }
+
+.feature-overlay { position: relative; z-index: 2; }
+
+.feature-overlay h3,
+.feature-overlay h3 i {
+  color: #fff;
+  text-shadow: 0 1px 4px rgba(0,0,0,.6), 0 2px 20px rgba(0,0,0,.45);
+}
+
+/* The number/label chip stays an opaque pill so it reads whatever
+   the image is doing behind it. */
+.feature-card .card-tag {
+  background: #fff;
+  color: var(--charcoal);
+  text-shadow: none;
+}
+
+.feature-card .circle-arrow { background: #fff; color: var(--charcoal); }
+
+/* ============================================================
+   ACTIVITY CARDS — same structure as the package cards
+   .activity-details is absolutely positioned and transparent over
+   the image, so every token inside it must be light. The heading,
+   the price and the counter value were all dark or amber on a
+   photograph.
+   ============================================================ */
+
+.activity-card { background: transparent; }
+
+.activity-card .activity-details,
+.activity-card .activity-details h3,
+.activity-card .activity-details p { color: #fff; }
+
+.activity-card .activity-details p { color: rgba(255,255,255,.88); }
+
+.activity-card .price-row strong,
+.activity-card .activity-price { color: #fff; }
+.activity-card .price-row span,
+.activity-card .price-note,
+.activity-card .activity-duration { color: rgba(255,255,255,.82); }
+
+.activity-card h3,
+.activity-card .price-row strong,
+.activity-card .activity-price,
+.activity-card .activity-duration,
+.activity-card .activity-details p {
+  text-shadow: 0 1px 3px rgba(0,0,0,.6), 0 2px 16px rgba(0,0,0,.4);
+}
+
+/* ── Counter ──────────────────────────────────────────────────
+   Sits on the photograph, so it gets its own solid backing rather
+   than relying on the image being dark enough behind it. */
+.activity-card .qty-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  background: rgba(255,255,255,.16);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,.35);
+  border-radius: var(--r-pill);
+}
+
+.activity-card .qty-val {
+  min-width: 24px;
+  text-align: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: var(--t-sm);
+  text-shadow: 0 1px 2px rgba(0,0,0,.5);
+}
+
+.activity-card .qty-btn {
+  width: 30px; height: 30px;
+  display: grid; place-items: center;
+  border: 0;
+  background: rgba(255,255,255,.92);
+  color: var(--charcoal);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-out);
+}
+.activity-card .qty-btn:hover:not(:disabled) { background: #fff; }
+.activity-card .qty-btn:disabled { background: rgba(255,255,255,.35); color: rgba(26,25,25,.45); cursor: default; }
+
+/* Active state uses the brand colour, still on a solid fill. */
+.activity-card .qty-control.is-active { background: rgba(2,76,92,.55); border-color: rgba(255,255,255,.5); }
+.activity-card .qty-control.is-active .qty-btn { background: #fff; color: var(--charcoal); }
+
+/* Category chip is an opaque pill, top-left, as on the other cards. */
+.activity-card .activity-category {
+  background: #fff;
+  color: var(--charcoal);
+  text-shadow: none;
+}
+
+/* ============================================================
+   HERO ALIGNMENT — middle left on every page with a hero image
+   styles.css top-aligns the home hero (align-items:flex-start),
+   story.css bottom-aligns the about hero (justify-content:flex-end)
+   and styles.css bottom-aligns the activities hero (align-items:end).
+   All three now sit vertically centred, left aligned.
+   ============================================================ */
+
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-block: var(--s-8);
+}
+.hero-copy { max-width: 620px; text-align: left; }
+
+.about-hero {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding-block: var(--s-8);
+}
+
+.activities-hero {
+  display: flex;
+  align-items: center;
+  padding-block: var(--s-8);
+}
+
+.transfers-hero, .itinerary-hero {
+  display: flex;
+  align-items: center;
+  padding-block: var(--s-8);
+}
+
+/* The fixed header overlaps the top of each hero, so a little extra
+   top padding keeps the centred block optically centred rather than
+   sitting under the bar. */
+.hero, .about-hero, .activities-hero, .transfers-hero {
+  padding-top: calc(var(--s-8) + 82px);
+}
+
+@media (max-width: 900px) {
+  .hero, .about-hero, .activities-hero, .transfers-hero {
+    padding-top: calc(var(--s-7) + 70px);
+    padding-bottom: var(--s-7);
+  }
+}
+
+/* ============================================================
+   HERO TEXT COLOUR — every hero sits on a photograph
+   The global heading colour is dark for the white page body, so
+   each hero section has to opt its own copy back to light. Only
+   .hero-copy was doing that; the activities, about, transfers and
+   itinerary heroes were painting #1a1919 onto their images.
+   ============================================================ */
+
+.hero, .about-hero, .activities-hero, .transfers-hero, .itinerary-hero { color: #fff; }
+
+.hero h1, .hero h2, .hero p,
+.about-hero h1, .about-hero h2, .about-hero p,
+.activities-hero h1, .activities-hero h2, .activities-hero p,
+.transfers-hero h1, .transfers-hero h2, .transfers-hero p,
+.itinerary-hero h1, .itinerary-hero h2, .itinerary-hero p,
+.hero h1 i, .about-hero h1 i, .activities-hero h1 i,
+.transfers-hero h1 i, .itinerary-hero h1 i {
+  color: #fff;
+}
+
+.hero .eyebrow, .about-hero .eyebrow, .activities-hero .eyebrow,
+.transfers-hero .eyebrow, .itinerary-hero .eyebrow {
+  color: rgba(255,255,255,.88);
+}
+
+.hero p, .about-hero p, .activities-hero p,
+.transfers-hero p, .itinerary-hero p { color: rgba(255,255,255,.92); }
+
+/* Legibility from a shadow on the type, so the photographs stay
+   as bright as they are. */
+.hero h1, .hero p, .hero .eyebrow, .hero .hero-kicker,
+.about-hero h1, .about-hero p, .about-hero .eyebrow,
+.activities-hero h1, .activities-hero p, .activities-hero .eyebrow,
+.transfers-hero h1, .transfers-hero p, .transfers-hero .eyebrow,
+.itinerary-hero h1, .itinerary-hero p, .itinerary-hero .eyebrow {
+  text-shadow: 0 1px 4px rgba(0,0,0,.6), 0 2px 22px rgba(0,0,0,.4);
+}
+
+/* activity-controls.css turns the active counter value amber, which
+   drops to a low ratio against the photograph behind it. */
+.activity-card .qty-control.is-active .qty-val { color: #fff; }
+.activity-card .qty-control.is-active .qty-inc { background: #fff; color: var(--charcoal); }
+.activity-card .qty-control.is-active .qty-inc:hover { background: #fff; }
+
+/* The control was clipping against the card edge. */
+.activity-card .activity-details { padding: var(--s-5); }
+.activity-card .activity-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  flex-wrap: wrap;
+  border-top: 1px solid rgba(255,255,255,.28);
+  padding-top: var(--s-3);
+}
+.activity-card .qty-control { flex: none; margin-left: auto; }
+.activity-card .price-block { flex: 1 1 auto; min-width: 0; }
+
+/* ============================================================
+   ACTIVITY CARD FOOTER — price, duration and counter
+   Three items in a narrow card. Below 1100px the grid columns get
+   tight enough that they collide, so the row becomes two lines:
+   price and duration together, counter on its own full-width line
+   with a real touch target.
+   ============================================================ */
+
+.activity-card .activity-bottom {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas: "price qty" "meta qty";
+  align-items: center;
+  column-gap: var(--s-3);
+  row-gap: 2px;
+}
+.activity-card .price-block       { grid-area: price; }
+.activity-card .activity-duration { grid-area: meta; }
+.activity-card .qty-control       { grid-area: qty; }
+
+@media (max-width: 1100px) {
+  .activity-card .activity-bottom {
+    grid-template-columns: 1fr;
+    grid-template-areas: "price" "meta" "qty";
+    row-gap: var(--s-3);
+    justify-items: start;
+  }
+  .activity-card .qty-control { margin-left: 0; width: 100%; justify-content: space-between; }
+  .activity-card .qty-btn { width: 38px; height: 38px; font-size: 19px; }
+  .activity-card .qty-val { flex: 1; font-size: var(--t-base); }
+}
+
+/* Give the card room so nothing is ever clipped. */
+.activity-card { overflow: visible; }
+.activity-card .activity-image { overflow: hidden; }
+.activity-grid { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+
+@media (max-width: 700px) {
+  .activity-grid { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   SITE-WIDE CONSISTENCY
+   The home page rules are global, but a few page-specific
+   sections were still carrying the old treatment.
+   ============================================================ */
+
+/* Squircle everywhere a card or panel appears, on every page. */
+@supports (corner-shape: squircle) {
+  .transfer-card, .transfers-grid > *, .about-card, .team-card,
+  .story-card, .value-card, .itinerary-card, .modal-card,
+  .selected-item, .activity-card, .package-card {
+    corner-shape: squircle;
+  }
+}
+
+.transfer-card, .about-card, .team-card, .story-card,
+.value-card, .itinerary-card {
+  border-radius: var(--r-md);
+  border: 1px solid var(--line-soft);
+  box-shadow: none;
+  background: var(--surface);
+}
+
+/* Any panel that sits on a photograph gets light copy, the same
+   rule the home page cards follow. */
+.transfer-card.has-image, .transfer-card.has-image * { color: #fff; }
