@@ -4388,3 +4388,8 @@ h2 { max-width: 34ch; }
   font-weight: 600;
   color: var(--ink) !important;
 }
+/* Three fleet slots again. */
+.fleet-grid { grid-template-columns: repeat(4, 1fr); }
+.fleet-card-wide { grid-column: span 2; }
+@media (max-width: 900px) { .fleet-grid { grid-template-columns: repeat(2,1fr); } .fleet-card-wide { grid-column: span 2; } }
+@media (max-width: 560px) { .fleet-grid { grid-template-columns: 1fr; } .fleet-card-wide { grid-column: span 1; } }
