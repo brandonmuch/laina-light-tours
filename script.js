@@ -485,17 +485,51 @@ document.querySelectorAll('.search-tab').forEach(tab =>
 /* ── Customizer options ──────────────────────────────────────────── */
 const itineraryOptions = document.querySelectorAll('.customizer-option input');
 if (itineraryOptions.length) {
-  const updateItinerary = () => {
-    const selected = [...itineraryOptions].filter(o => o.checked).map(o => o.value);
-    const obj = {};
-    selected.forEach(name => { obj[name] = 1; });
-    setSelections(obj);
-    document.querySelector('#itinerary-count').textContent =
-      `${selected.length} experience${selected.length === 1 ? '' : 's'} selected`;
-    document.querySelector('#itinerary-list').textContent =
-      selected.length ? selected.join(' · ') : 'Select experiences to begin building your day.';
+
+  /* These checkboxes previously called setSelections with an object
+     built only from themselves, which replaced the whole cart and
+     silently discarded anything chosen on the activities page. They
+     now add and remove their own item and leave the rest alone. */
+  const syncFromStore = () => {
+    const sels = getSelections();
+    itineraryOptions.forEach(o => { o.checked = !!sels[o.value]; });
+    paint();
   };
-  itineraryOptions.forEach(o => o.addEventListener('change', updateItinerary));
+
+  const paint = () => {
+    const sels  = getSelections();
+    const names = Object.keys(sels);
+    const total = names.reduce((acc, n) => acc + sels[n], 0);
+
+    const countEl = document.querySelector('#itinerary-count');
+    if (countEl) {
+      countEl.textContent = total
+        ? total + ' experience' + (total === 1 ? '' : 's') + ' selected'
+        : 'Nothing selected yet';
+    }
+
+    const listEl = document.querySelector('#itinerary-list');
+    if (listEl) {
+      listEl.textContent = names.length
+        ? names.map(n => sels[n] > 1 ? n + ' x' + sels[n] : n).join(' \u00b7 ')
+        : 'Tick an experience below, or browse the full catalogue.';
+    }
+  };
+
+  itineraryOptions.forEach(o =>
+    o.addEventListener('change', () => {
+      const sels = getSelections();
+      if (o.checked) {
+        sels[o.value] = sels[o.value] || 1;
+      } else {
+        delete sels[o.value];
+      }
+      setSelections(sels);
+      paint();
+    })
+  );
+
+  syncFromStore();
 }
 
 /* ── Itinerary page ──────────────────────────────────────── */

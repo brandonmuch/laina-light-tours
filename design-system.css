@@ -2038,3 +2038,62 @@ html, body { max-width: 100%; overflow-x: hidden; }
 
 /* Amber eyebrow on the petrol group panel measured below AA. */
 .group-enquiry .eyebrow { color: #f5c977; }
+
+/* ============================================================
+   ONE PRIMARY NAV ACTION
+   The header carried two competing CTAs. The itinerary button is
+   now the single primary: brand petrol, with the live count. The
+   WhatsApp route lives in the contact section and on the itinerary
+   submit, which is where it belongs in the flow.
+   ============================================================ */
+
+.header-cart {
+  background: var(--petrol);
+  color: #fff;
+  font-size: 14px;
+  padding: 10px 22px;          /* 34px tall, pill-adjusted */
+  line-height: 1;
+}
+.header-cart:hover { background: var(--petrol-deep); color: #fff; }
+.header-cart .icon { stroke: #fff; }
+
+/* Count badge sits in amber against the petrol fill. */
+.header-cart .btn-count { background: var(--amber); color: var(--charcoal); }
+
+/* The label stays visible on phones now that it is the only CTA. */
+@media (max-width: 900px) {
+  .header-cart span:not(.btn-count) { display: inline; }
+  .header-cart { padding: 9px 16px; }
+}
+@media (max-width: 420px) {
+  .header-cart span:not(.btn-count) { display: none; }
+  .header-cart { padding: 9px 12px; }
+}
+
+/* Hero now carries a single action. */
+.hero-actions { gap: var(--s-4); }
+
+/* align-self:flex-start in the button scale block pushed header
+   buttons to the top of the header's flex row. Inside a header they
+   centre; the flex-start default only matters in stacked copy blocks. */
+.site-header .header-cart,
+.site-header .button { align-self: center; }
+
+/* The booking form is a grid, so its submit was stretching to the
+   full column. It hugs like every other button, and takes the
+   brand fill since it is that form's primary action. */
+.booking-form button[type="submit"] {
+  width: auto;
+  justify-self: start;
+  background: var(--petrol);
+  color: #fff;
+  font-size: 16px;
+  padding: 12px 30px;
+  line-height: 1;
+}
+.booking-form button[type="submit"]:hover { background: var(--petrol-deep); }
+.booking-form button[type="submit"] .icon { stroke: #fff; }
+
+@media (max-width: 620px) {
+  .booking-form button[type="submit"] { width: 100%; justify-self: stretch; }
+}
