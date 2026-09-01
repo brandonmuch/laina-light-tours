@@ -1,13 +1,121 @@
-:root{--ease-out:cubic-bezier(.23,1,.32,1)}
+:root{
+  --ease-out:cubic-bezier(.23,1,.32,1);
+  --ease-spring:cubic-bezier(.34,1.56,.64,1);
+}
+
+/* ── Hero entrance ────────────────────────────────────────── */
 .hero-copy{animation:hero-copy-in 700ms var(--ease-out) both}
 .hero-scroll{animation:hero-fade-in 500ms var(--ease-out) 420ms both}
-.benefits-bar,.packages-section,.discover,.split-section,.quote-section,.customizer-section{opacity:0;transform:translateY(18px);transition:opacity 650ms var(--ease-out),transform 650ms var(--ease-out)}
+
+/* ── Scroll reveal — all page sections ───────────────────── */
+.benefits-bar,
+.packages-section,
+.discover,
+.split-section,
+.quote-section,
+.customizer-section,
+.about-intro,
+.about-image,
+.about-values,
+.about-cta,
+.transfer-intro,
+.transfer-features,
+.routes-section,
+.transfers-cta,
+.itinerary-hero,
+.itinerary-builder,
+.catalog-cta{
+  opacity:0;
+  transform:translateY(20px);
+  transition:opacity 620ms var(--ease-out),transform 620ms var(--ease-out);
+}
 .is-visible{opacity:1;transform:translateY(0)}
-.activity-card{animation:card-in 500ms var(--ease-out) both}
-.activity-card:nth-child(2){animation-delay:50ms}.activity-card:nth-child(3){animation-delay:100ms}.activity-card:nth-child(4){animation-delay:150ms}.activity-card:nth-child(5){animation-delay:200ms}.activity-card:nth-child(6){animation-delay:250ms}
-.modal{opacity:0;transition:opacity 220ms ease}.modal.open{opacity:1}.modal-card{transform:scale(.97);transition:transform 220ms var(--ease-out)}.modal.open .modal-card{transform:scale(1)}
-@keyframes hero-copy-in{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
-@keyframes hero-fade-in{from{opacity:0}to{opacity:1}}
-@keyframes card-in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-@media (hover:hover) and (pointer:fine){.button:hover,.feature-card:hover,.package-card:hover,.activity-card:hover{transition:transform 180ms ease}.button:hover{transform:translateY(-2px)}}
-@media (prefers-reduced-motion:reduce){.hero-copy,.hero-scroll,.activity-card{animation:none}.benefits-bar,.packages-section,.discover,.split-section,.quote-section,.customizer-section{opacity:1;transform:none;transition:opacity 180ms ease}.modal,.modal-card{transition:opacity 180ms ease,transform 180ms ease}.modal-card{transform:none}}
+
+/* ── Activity card entrance — stagger via inline delay ───── */
+.activity-card{animation:card-in 480ms var(--ease-out) both}
+
+/* ── Route card stagger ───────────────────────────────────── */
+.route-card{
+  animation:card-in 500ms var(--ease-out) both;
+  opacity:0;
+}
+.route-card:nth-child(1){animation-delay:0ms}
+.route-card:nth-child(2){animation-delay:60ms}
+.route-card:nth-child(3){animation-delay:120ms}
+.route-card:nth-child(4){animation-delay:180ms}
+.route-card:nth-child(5){animation-delay:240ms}
+.route-card:nth-child(6){animation-delay:300ms}
+
+/* ── Values articles stagger ─────────────────────────────── */
+.values-grid article{
+  animation:card-in 520ms var(--ease-out) both;
+  opacity:0;
+}
+.values-grid article:nth-child(1){animation-delay:0ms}
+.values-grid article:nth-child(2){animation-delay:80ms}
+.values-grid article:nth-child(3){animation-delay:160ms}
+
+/* ── Modal ────────────────────────────────────────────────── */
+.modal{opacity:0;transition:opacity 220ms ease}
+.modal.open{opacity:1}
+.modal-card{transform:scale(.96) translateY(8px);transition:transform 280ms var(--ease-out),opacity 220ms ease;opacity:0}
+.modal.open .modal-card{transform:scale(1) translateY(0);opacity:1}
+
+/* ── Press feedback — buttons and counters ───────────────── */
+@media (hover:hover) and (pointer:fine){
+  .button:hover,.feature-card:hover,.package-card:hover,.activity-card:hover{
+    transition:transform 180ms ease
+  }
+  .button:hover{transform:translateY(-2px)}
+}
+.button:active{transform:scale(0.97);transition:transform 120ms ease-out}
+.qty-btn:active:not(:disabled){transform:scale(0.88);transition:transform 110ms ease-out}
+.activity-add:active{transform:scale(0.93);transition:transform 120ms ease-out}
+.header-cta:active{transform:scale(0.96);transition:transform 120ms ease-out}
+
+/* ── Footer link hover ────────────────────────────────────── */
+.site-footer a{transition:color 180ms ease,opacity 180ms ease}
+.site-footer a:hover{color:#fff;opacity:1}
+
+/* ── Itinerary success fade-in ───────────────────────────── */
+@keyframes success-in{
+  from{opacity:0;transform:translateY(6px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.itinerary-success:not(:empty){
+  animation:success-in 400ms var(--ease-out) both
+}
+
+/* ── Nav scroll state ─────────────────────────────────────── */
+.site-header{transition:background .28s ease,box-shadow .28s ease,color .28s ease}
+
+/* ── Keyframes ────────────────────────────────────────────── */
+@keyframes hero-copy-in{
+  from{opacity:0;transform:translateY(18px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes hero-fade-in{
+  from{opacity:0}
+  to{opacity:1}
+}
+@keyframes card-in{
+  from{opacity:0;transform:translateY(14px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* ── Reduced motion ───────────────────────────────────────── */
+@media (prefers-reduced-motion:reduce){
+  .hero-copy,.hero-scroll,.activity-card,.route-card,.values-grid article{
+    animation:none;opacity:1;transform:none
+  }
+  .benefits-bar,.packages-section,.discover,.split-section,
+  .quote-section,.customizer-section,.about-intro,.about-image,
+  .about-values,.about-cta,.transfer-intro,.transfer-features,
+  .routes-section,.transfers-cta,.itinerary-hero,.itinerary-builder,
+  .catalog-cta{
+    opacity:1;transform:none;transition:opacity 180ms ease
+  }
+  .modal,.modal-card{transition:opacity 150ms ease,transform 150ms ease}
+  .modal-card{transform:none}
+  .button:active,.qty-btn:active,.activity-add:active{transform:none}
+}
