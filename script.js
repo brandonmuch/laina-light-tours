@@ -144,7 +144,8 @@ function renderActivities() {
   grid.innerHTML = visible.map(a => {
     const qty = sels[a[0]] || 0;
     const activeClass = qty > 0 ? ' is-active' : '';
-    return `<article class="activity-card" data-name="${a[0]}">
+    const delay = Math.min(i, 9) * 55;
+    return `<article class="activity-card" data-name="${a[0]}" style="animation-delay:${delay}ms">
       <div class="activity-card-image">
         <img src="${a[5]}" alt="${a[0]}">
         <span class="activity-category">${a[1]}</span>
@@ -297,7 +298,7 @@ if (siteHeader) {
 
 /* ── Reveal on scroll ────────────────────────────────────────────── */
 const revealTargets = document.querySelectorAll(
-  '.benefits-bar,.packages-section,.discover,.split-section,.quote-section,.customizer-section'
+  '.benefits-bar,.packages-section,.discover,.split-section,.quote-section,.customizer-section,.about-intro,.about-image,.about-values,.about-cta,.transfer-intro,.transfer-features,.routes-section,.transfers-cta,.itinerary-hero,.itinerary-builder,.catalog-cta'
 );
 if (revealTargets.length && 'IntersectionObserver' in window) {
   const revealObserver = new IntersectionObserver(entries =>
