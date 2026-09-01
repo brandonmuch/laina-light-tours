@@ -522,6 +522,58 @@ if (itineraryList) {
     });
   }
 
+
+  /* Airport transfer. $35 per vehicle per leg, up to four people.
+     Stored with the rest of the trip so it survives a refresh and
+     travels into the WhatsApp message with route and flight. */
+  const TRANSFER_RATE = 35;
+  const tArrival   = document.querySelector('#transfer-arrival');
+  const tDeparture = document.querySelector('#transfer-departure');
+  const tRoute     = document.querySelector('#transfer-route');
+  const tFlight    = document.querySelector('#transfer-flight');
+  const tTotal     = document.querySelector('#transfer-total');
+
+  function getTransfer() {
+    try { return JSON.parse(localStorage.getItem('lainaTransfer') || '{}'); }
+    catch (e) { return {}; }
+  }
+
+  function drawTransferTotal(t) {
+    if (!tTotal) return;
+    const legs = (t.arrival ? 1 : 0) + (t.departure ? 1 : 0);
+    if (!legs) { tTotal.hidden = true; return; }
+    tTotal.hidden = false;
+    tTotal.innerHTML =
+      '<strong>$' + (legs * TRANSFER_RATE) + '</strong> for ' +
+      (legs === 2 ? 'a return transfer' : 'a one-way transfer') +
+      ' <span>&middot; $' + TRANSFER_RATE + ' per vehicle per leg, up to 4 people</span>';
+  }
+
+  function saveTransfer() {
+    if (!tArrival) return;
+    const t = {
+      arrival: tArrival.checked,
+      departure: tDeparture.checked,
+      route: tRoute.value,
+      flight: tFlight.value.trim()
+    };
+    localStorage.setItem('lainaTransfer', JSON.stringify(t));
+    drawTransferTotal(t);
+  }
+
+  if (tArrival) {
+    const savedT = getTransfer();
+    tArrival.checked   = !!savedT.arrival;
+    tDeparture.checked = !!savedT.departure;
+    if (savedT.route)  tRoute.value  = savedT.route;
+    if (savedT.flight) tFlight.value = savedT.flight;
+    drawTransferTotal(savedT);
+    [tArrival, tDeparture, tRoute, tFlight].forEach(function (el) {
+      el.addEventListener('change', saveTransfer);
+    });
+    tFlight.addEventListener('input', saveTransfer);
+  }
+
   const draw = () => {
     const sels  = getSelections();
     const sched = getSchedule();
@@ -638,13 +690,25 @@ if (itineraryList) {
         }).join('\n')
       : 'I need help choosing activities.';
 
+    /* Transfer block, only when a leg is actually selected. */
+    const t = getTransfer();
+    const legs = (t.arrival ? 1 : 0) + (t.departure ? 1 : 0);
+    const transferBlock = legs
+      ? "\n\nAirport transfer: " + (legs === 2 ? 'Return' : (t.arrival ? 'Arrival only' : 'Departure only')) +
+        "\nRoute: " + (t.route || 'to confirm') +
+        (t.flight ? "\nFlight: " + t.flight : '') +
+        "\nTransfer subtotal: $" + (legs * TRANSFER_RATE) +
+        " (" + legs + " leg" + (legs > 1 ? 's' : '') + " x $" + TRANSFER_RATE + " per vehicle)"
+      : '';
+
     const message =
-      `Hello Laina Light Tours, here are my trip details.\n\n` +
-      `Arrival: ${arrival.value ? prettyDate(arrival.value) : 'to confirm'}\n` +
-      `Departure: ${departure.value ? prettyDate(departure.value) : 'to confirm'}\n` +
-      `Travellers: ${adultSel.value} adult(s), ${childSel.value} child(ren)\n\n` +
-      `Experiences (${names.reduce((s, n) => s + sels[n], 0)}):\n${lines}\n\n` +
-      `Please confirm availability and the final quote.`;
+      "Hello Laina Light Tours, here are my trip details.\n\n" +
+      "Arrival: " + (arrival.value ? prettyDate(arrival.value) : 'to confirm') + "\n" +
+      "Departure: " + (departure.value ? prettyDate(departure.value) : 'to confirm') + "\n" +
+      "Travellers: " + adultSel.value + " adult(s), " + childSel.value + " child(ren)" +
+      transferBlock + "\n\n" +
+      "Experiences (" + names.reduce((acc, n) => acc + sels[n], 0) + "):\n" + lines + "\n\n" +
+      "Please confirm availability and the final quote.";
 
     window.open(waLink(message), '_blank');
 
@@ -653,7 +717,7 @@ if (itineraryList) {
       ok.hidden = false;
       ok.innerHTML =
         '<strong>Sent to WhatsApp.</strong> Your experiences and preferred times have been passed to the team. ' +
-        'They will confirm availability and send the final quote — nothing is booked until they reply.';
+        'They will confirm availability and send the final quote. Nothing is booked until they reply.';
     }
   });
 }

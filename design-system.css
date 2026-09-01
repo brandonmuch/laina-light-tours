@@ -1756,3 +1756,285 @@ select {
     width: 46px; height: 46px; flex-basis: 46px; font-size: 42px;
   }
 }
+
+/* ============================================================
+   BUTTON SCALE
+   Built to the ratio formula rather than eyeballed:
+     vertical padding   = 0.5–0.75x font size
+     horizontal padding = 1.5–2x vertical padding
+     line-height        = locked to 1, never inherited
+     pill               = +25% horizontal so text clears the curve
+
+   font  T/B   L/R (pill)   height
+   14px   8    16 -> 20      32px    .button-sm
+   16px  12    24 -> 30      40px    .button     (default)
+   18px  16    32 -> 40      48px    .button-lg
+   ============================================================ */
+
+.button, .header-cta, .header-cart, .button-light, .button-dark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: auto;               /* hug contents, never stretch */
+  align-self: flex-start;
+  font-size: 16px;
+  line-height: 1;            /* locked, so height is padding-driven */
+  font-weight: 600;
+  padding: 12px 30px;        /* 40px tall, pill-adjusted horizontal */
+  border: 0;
+  border-radius: var(--r-pill);
+  white-space: nowrap;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+.button-sm, .header-cart {
+  font-size: 14px;
+  padding: 8px 20px;         /* 32px tall */
+}
+
+.button-lg {
+  font-size: 18px;
+  padding: 16px 40px;        /* 48px tall */
+}
+
+/* Icons sit on the text baseline and must not inflate the height. */
+.button .icon, .header-cta .icon, .header-cart .icon {
+  width: 1.1em; height: 1.1em;
+  flex: none;
+  align-self: center;
+}
+.btn-count { line-height: 1; }
+
+/* A button only fills its container when it is deliberately a
+   block action — a form submit or a full-width mobile CTA. */
+.button-block, #add-itinerary { width: 100%; }
+
+@media (max-width: 560px) {
+  .hero-actions .button { width: 100%; }
+}
+
+/* Stop legacy stylesheets stretching buttons inside flex/grid
+   parents, which is what made the group-quote button full width. */
+.group-enquiry .button,
+.transfer-cta .button,
+.itinerary-submit .button,
+.split-copy .button,
+.home-transfers-copy .button {
+  width: auto;
+  flex: 0 0 auto;
+  justify-self: start;
+}
+
+/* ============================================================
+   TRANSFERS PAGE
+   More of the brand blue and yellow, and a fleet section that
+   labels its own missing images rather than showing broken icons.
+   ============================================================ */
+
+.fleet-section { max-width: var(--shell); margin: 0 auto var(--s-10); padding-inline: clamp(20px,5vw,40px); }
+
+.fleet-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--s-4);
+}
+.fleet-card-wide { grid-column: span 2; }
+@media (max-width: 900px) {
+  .fleet-grid { grid-template-columns: repeat(2, 1fr); }
+  .fleet-card-wide { grid-column: span 2; }
+}
+@media (max-width: 560px) {
+  .fleet-grid { grid-template-columns: 1fr; }
+  .fleet-card-wide { grid-column: span 1; }
+}
+
+.fleet-card { margin: 0; }
+.fleet-media {
+  position: relative;
+  aspect-ratio: 3 / 2;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--surface-2);
+}
+@supports (corner-shape: squircle) { .fleet-media { corner-shape: squircle; } }
+.fleet-card-wide .fleet-media { aspect-ratio: 16 / 9; }
+.fleet-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* Placeholder shown only when the file is not there yet. */
+.fleet-empty { display: none; }
+.fleet-media.is-empty {
+  display: grid;
+  place-items: center;
+  background: var(--sun-wash, #fdf4e8);
+  border: 1px dashed var(--amber);
+}
+.fleet-media.is-empty .fleet-empty {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  text-align: center;
+  padding: var(--s-4);
+  color: var(--amber-deep);
+}
+.fleet-media.is-empty .icon { font-size: 34px; }
+.fleet-media.is-empty span span { display: grid; gap: 3px; font-size: var(--t-sm); font-weight: 600; }
+.fleet-media.is-empty small { font-size: var(--t-micro); font-weight: 400; color: var(--ink-3); word-break: break-all; }
+
+.fleet-card figcaption { display: grid; gap: 2px; padding-top: var(--s-3); }
+.fleet-card figcaption strong { font-size: var(--t-base); font-weight: 600; color: var(--ink); }
+.fleet-card figcaption span { font-size: var(--t-sm); color: var(--ink-3); }
+
+/* ── Brand colour through the page ────────────────────────────── */
+
+.transfer-features article {
+  padding: var(--s-5);
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r-lg);
+}
+@supports (corner-shape: squircle) { .transfer-features article { corner-shape: squircle; } }
+
+.feature-number {
+  display: inline-grid;
+  place-items: center;
+  width: 40px; height: 40px;
+  margin-bottom: var(--s-3);
+  border-radius: var(--r-circle);
+  background: var(--petrol);
+  color: #fff;
+  font-size: var(--t-sm);
+  font-weight: 700;
+}
+
+.route-card { border-left: 3px solid var(--amber); padding-left: var(--s-4); }
+.route-label { color: var(--petrol); font-weight: 600; }
+
+.transfer-price {
+  background: var(--petrol);
+  color: #fff;
+  border-radius: var(--r-lg);
+  padding: var(--s-5) var(--s-6);
+}
+@supports (corner-shape: squircle) { .transfer-price { corner-shape: squircle; } }
+.transfer-price strong { color: var(--amber); font-size: clamp(40px, 6vw, 60px); font-weight: 700; line-height: 1; display: block; }
+.transfer-price span, .transfer-price small { color: rgba(255,255,255,.82); }
+
+.group-enquiry { background: var(--petrol); color: #fff; }
+.group-enquiry h2, .group-enquiry .eyebrow { color: #fff; }
+.group-enquiry .eyebrow { color: var(--amber); }
+.group-enquiry p { color: rgba(255,255,255,.88); }
+.group-enquiry li { color: rgba(255,255,255,.9); }
+.group-enquiry li .icon { color: var(--amber); }
+.group-enquiry .button-light { background: var(--amber); color: var(--charcoal); }
+.group-enquiry .button-light:hover { background: var(--amber-lift, #f7b943); }
+.group-enquiry .button-light .icon { stroke: var(--charcoal); }
+
+/* ============================================================
+   ITINERARY TRANSFER PANEL
+   ============================================================ */
+
+.transfer-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-3); }
+@media (max-width: 620px) { .transfer-toggle { grid-template-columns: 1fr; } }
+
+.transfer-leg { cursor: pointer; }
+.transfer-leg input { position: absolute; opacity: 0; pointer-events: none; }
+.leg-body {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  padding: var(--s-4);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  transition: border-color var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
+}
+@supports (corner-shape: squircle) { .leg-body { corner-shape: squircle; } }
+.leg-body .icon { font-size: 22px; color: var(--petrol); flex: none; }
+.leg-body > span:not(.leg-price) { display: grid; gap: 2px; flex: 1; min-width: 0; }
+.leg-body strong { font-size: var(--t-base); font-weight: 600; }
+.leg-body small { font-size: var(--t-sm); color: var(--ink-3); }
+.leg-price { font-size: var(--t-md); font-weight: 700; color: var(--ink); flex: none; }
+
+.transfer-leg input:checked + .leg-body {
+  border-color: var(--petrol);
+  background: #f2f8f9;
+}
+.transfer-leg input:focus-visible + .leg-body { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+.transfer-route { display: grid; grid-template-columns: 1.4fr 1fr; gap: var(--s-4); margin-top: var(--s-4); }
+@media (max-width: 620px) { .transfer-route { grid-template-columns: 1fr; } }
+
+.transfer-total {
+  margin-top: var(--s-4);
+  padding: var(--s-3) var(--s-4);
+  background: var(--sun-wash, #fdf4e8);
+  border-radius: var(--r-sm);
+  font-size: var(--t-sm);
+  color: var(--ink-2);
+}
+.transfer-total strong { font-size: var(--t-md); color: var(--ink); }
+.transfer-total[hidden] { display: none; }
+.transfer-note { margin-top: var(--s-3); font-size: var(--t-sm); color: var(--ink-3); }
+.transfer-note a { color: var(--petrol); text-decoration: underline; }
+
+:root { --sun-wash: #fdf4e8; --amber-lift: #f7b943; }
+
+/* ============================================================
+   MOBILE OVERFLOW FIXES
+   The button-scale block sets display:inline-flex unconditionally,
+   which re-showed the header CTA that the mobile rules had hidden.
+   And the transfers hero price card was overrunning the viewport
+   by ~150px at phone widths.
+   ============================================================ */
+
+html, body { max-width: 100%; overflow-x: hidden; }
+
+@media (max-width: 700px) {
+  .site-header .header-cta { display: none !important; }
+}
+
+@media (max-width: 820px) {
+  .transfers-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--s-5);
+  }
+  .transfers-hero > * { max-width: 100%; width: 100%; }
+  .transfer-price {
+    position: static;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: var(--s-4) var(--s-5);
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 4px var(--s-3);
+  }
+  .transfer-price strong { font-size: 40px; display: inline; }
+  .transfer-price small { flex-basis: 100%; }
+}
+
+/* Nothing may push the page wider than the viewport. */
+.transfers-hero, .hero, .activities-hero, .about-hero,
+.home-transfers, .booking-wrap, .credentials, .benefits-bar,
+.group-enquiry, .fleet-section, .contact-section {
+  max-width: min(var(--shell), 100%);
+  box-sizing: border-box;
+}
+
+.route-grid, .fleet-grid, .package-grid, .feature-grid, .activity-grid {
+  min-width: 0;
+}
+.route-card, .fleet-card, .package-card, .activity-card { min-width: 0; }
+
+/* The fleet placeholder used --amber-deep on the warm wash, which
+   measured below AA. Darkened to clear 4.5:1 on #fdf4e8. */
+.fleet-media.is-empty .fleet-empty { color: #6b4a08; }
+.fleet-media.is-empty small { color: #5f5648; }
+
+/* Amber eyebrow on the petrol group panel measured below AA. */
+.group-enquiry .eyebrow { color: #f5c977; }

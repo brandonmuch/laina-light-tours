@@ -31,7 +31,7 @@
     <header class="itinerary-hero-block">
       <p class="eyebrow">Step 2 of 2 &middot; Almost there</p>
       <h1>Your experiences.</h1>
-      <p class="itinerary-lead">Set a date and time for each one, add your travel details, and we will send the whole plan to the team on WhatsApp. Nothing is charged here &mdash; they confirm availability and send your final quote.</p>
+      <p class="itinerary-lead">Set a date and time for each one, then add your travel details. We send the whole plan to the team on WhatsApp. Nothing is charged here. They confirm availability and send your final quote.</p>
     </header>
 
     <form id="itinerary-form" class="itinerary-form">
@@ -48,6 +48,54 @@
           <label><span>Adults</span><select id="adult-count"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5+</option></select></label>
           <label><span>Children</span><select id="child-count"><option selected>0</option><option>1</option><option>2</option><option>3</option><option>4+</option></select></label>
         </div>
+      </section>
+
+
+      <section class="itinerary-panel transfer-panel">
+        <div class="panel-head">
+          <h2>Airport transfer</h2>
+          <p>$35 per vehicle, up to 4 people. Add one leg or both.</p>
+        </div>
+
+        <div class="transfer-toggle" role="group" aria-label="Transfer legs">
+          <label class="transfer-leg">
+            <input type="checkbox" id="transfer-arrival">
+            <span class="leg-body">
+              <svg class="icon" aria-hidden="true"><use href="#i-plane"/></svg>
+              <span><strong>Arrival</strong><small>Airport to your hotel</small></span>
+              <span class="leg-price">$35</span>
+            </span>
+          </label>
+          <label class="transfer-leg">
+            <input type="checkbox" id="transfer-departure">
+            <span class="leg-body">
+              <svg class="icon" aria-hidden="true"><use href="#i-plane"/></svg>
+              <span><strong>Departure</strong><small>Hotel back to the airport</small></span>
+              <span class="leg-price">$35</span>
+            </span>
+          </label>
+        </div>
+
+        <div class="transfer-route">
+          <label>
+            <span>Route</span>
+            <select id="transfer-route">
+              <option>Victoria Falls Airport (VFA)</option>
+              <option>Livingstone Airport (LVI), Zambia</option>
+              <option>Kasane Airport (BBK), Botswana</option>
+              <option>Kazungula border</option>
+              <option>Hwange National Park</option>
+              <option>Other (I will confirm on WhatsApp)</option>
+            </select>
+          </label>
+          <label>
+            <span>Flight number (optional)</span>
+            <input type="text" id="transfer-flight" placeholder="e.g. SA 40" autocomplete="off">
+          </label>
+        </div>
+
+        <p class="transfer-total" id="transfer-total" hidden></p>
+        <p class="transfer-note">Larger parties and cross-border charters are quoted separately. <a href="transfers.html#groups">See group transfers</a>.</p>
       </section>
 
       <section class="itinerary-panel itinerary-selection">
