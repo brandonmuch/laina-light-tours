@@ -18,3 +18,16 @@
 .about-cta>div>p:not(.eyebrow){color:rgba(255,255,255,.7);font-size:15px;line-height:1.75;max-width:360px;margin:0 auto}
 .about-cta .eyebrow{color:var(--sun)}
 @media(max-width:800px){.about-cta{padding:80px 25px}}
+
+.about-intro--stacked{display:block;max-width:720px;padding:90px 10vw}
+.about-intro--stacked h2{margin:12px 0 28px}
+.about-intro--stacked .about-intro__body{display:grid;grid-template-columns:1fr 1fr;gap:0 48px}
+.about-intro--stacked .about-intro__body p{font-size:15px;line-height:1.8;color:var(--ink-light)}
+@media(max-width:700px){
+  .about-intro--stacked{padding:60px 25px}
+  .about-intro--stacked .about-intro__body{grid-template-columns:1fr}
+}
+.about-values--stacked{padding:90px 10vw}
+.about-values--stacked .about-values__head{margin-bottom:52px}
+.about-values--stacked .about-values__head h2{max-width:520px}
+@media(max-width:700px){.about-values--stacked{padding:60px 25px}}
