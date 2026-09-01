@@ -4170,3 +4170,212 @@ h2 { max-width: 34ch; }
 .hero-copy h1, .section-heading h2, .pkg-hero h1, .itinerary-hero-block h1 {
   text-wrap: balance;
 }
+
+/* ============================================================
+   ACTIVITIES HERO — safari photograph
+   The source is mostly empty sky, so the file is pre-cropped to the
+   lower band where the vehicle and the herd are. A flat scrim keeps
+   the copy readable over the pale grass without washing the image
+   out, and the focal point is held low so the vehicle stays in
+   frame as the hero gets shorter.
+   ============================================================ */
+
+.activities-hero.has-safari-hero {
+  background-image:
+    linear-gradient(rgba(16,20,14,.46), rgba(16,20,14,.46)),
+    url('hu-chen-t-7Mlatf9iI-unsplash.jpg') !important;
+  background-size: cover !important;
+  background-position: center 68% !important;
+  background-repeat: no-repeat !important;
+  min-height: 460px;
+}
+
+.activities-hero.has-safari-hero h1,
+.activities-hero.has-safari-hero p,
+.activities-hero.has-safari-hero .eyebrow { color: #fff !important; }
+.activities-hero.has-safari-hero h1 {
+  text-shadow: 0 2px 6px rgba(0,0,0,.55), 0 2px 26px rgba(0,0,0,.4);
+}
+.activities-hero.has-safari-hero p,
+.activities-hero.has-safari-hero .eyebrow {
+  text-shadow: 0 1px 4px rgba(0,0,0,.6);
+}
+
+@media (max-width: 820px) {
+  .activities-hero.has-safari-hero { min-height: 380px; background-position: 60% 70% !important; }
+}
+
+/* ============================================================
+   PACKAGES PAGE HEAD — align with the grid below it
+   The intro sat in an 820px centred column while the cards run to
+   the shell width, so the two started at different left edges.
+   ============================================================ */
+
+.pkg-hero {
+  max-width: var(--shell);
+  margin: 0 auto;
+  padding: calc(var(--s-8) + 82px) clamp(20px,4vw,40px) var(--s-7);
+}
+.pkg-hero h1 { max-width: 18ch; }
+.pkg-lead { max-width: 62ch; }
+
+.pkg-grid-section { padding-inline: clamp(20px,4vw,40px); }
+
+/* ============================================================
+   PACKAGES NOTE — set apart as a footnote, not stray body copy
+   ============================================================ */
+
+.pkg-note {
+  margin-top: var(--s-6);
+  padding: var(--s-4) var(--s-5);
+  background: var(--surface-2);
+  border-radius: var(--r-md);
+  border-left: 3px solid var(--petrol);
+  font-size: var(--t-sm) !important;
+  line-height: 1.6;
+  color: var(--ink-2) !important;
+  max-width: 78ch;
+}
+@supports (corner-shape: squircle) { .pkg-note { corner-shape: squircle; } }
+
+/* ============================================================
+   PACKAGE COUNTERS
+   Same control as the activity cards, on a light card so it takes
+   the light treatment rather than the glass one.
+   ============================================================ */
+
+.pkg-card .pkg-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  flex-wrap: wrap;
+}
+.pkg-card .price-block { flex: 1 1 auto; min-width: 0; }
+
+.pkg-card .qty-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  flex: none;
+}
+.pkg-card .qty-control.is-active { border-color: var(--petrol); background: #f2f8f9; }
+.pkg-card .qty-btn {
+  width: 32px; height: 32px;
+  display: grid; place-items: center;
+  border: 0; border-radius: 50%;
+  background: var(--surface);
+  color: var(--charcoal);
+  font-size: 18px; font-weight: 600; line-height: 1;
+  cursor: pointer;
+  box-shadow: var(--e-1);
+}
+.pkg-card .qty-btn:hover:not(:disabled) { background: var(--petrol); color: #fff; }
+.pkg-card .qty-btn:disabled { opacity: .45; cursor: default; box-shadow: none; }
+.pkg-card .qty-val {
+  min-width: 28px; text-align: center;
+  font-size: var(--t-base); font-weight: 700; color: var(--ink);
+}
+
+.pkg-go { flex: none; }
+
+@media (max-width: 520px) {
+  .pkg-card .pkg-foot { flex-direction: column; align-items: stretch; }
+  .pkg-card .qty-control { justify-content: space-between; }
+  .pkg-go { width: 100% !important; }
+}
+
+/* ============================================================
+   ABOUT VALUES — blue cards, white copy
+   ============================================================ */
+
+.values-grid > * {
+  background: var(--petrol) !important;
+  border: 0 !important;
+  color: #fff !important;
+  box-shadow: var(--lift-1) !important;
+  padding: var(--s-5) !important;
+}
+.values-grid h3, .values-grid h3 i { color: #fff !important; }
+.values-grid p { color: rgba(255,255,255,.86) !important; }
+.values-grid > *:hover { background: var(--petrol-deep) !important; box-shadow: var(--lift-3) !important; }
+
+/* ============================================================
+   ABOUT CLOSING CTA — a card, not a full-bleed slab
+   Centred copy in a band that ran edge to edge read as a different
+   site. It now matches the other panels on the page.
+   ============================================================ */
+
+.about-cta {
+  max-width: var(--shell) !important;
+  margin: 0 auto var(--band) !important;
+  padding: clamp(36px,5vw,64px) clamp(24px,5vw,56px) !important;
+  border-radius: var(--r-xl) !important;
+  display: grid !important;
+  grid-template-columns: 1.2fr auto;
+  align-items: center;
+  justify-items: start;
+  text-align: left !important;
+  gap: clamp(24px,4vw,56px);
+}
+@supports (corner-shape: squircle) { .about-cta { corner-shape: squircle; } }
+.about-cta h2 { margin: 0 0 6px; max-width: 18ch; text-align: left; }
+.about-cta p { margin: 0; text-align: left; max-width: 48ch; }
+.about-cta .button {
+  background: #fff !important;
+  color: var(--petrol) !important;
+  justify-self: end;
+}
+.about-cta .button .icon { stroke: var(--petrol) !important; }
+
+@media (max-width: 780px) {
+  .about-cta { grid-template-columns: 1fr; margin-inline: 20px !important; }
+  .about-cta .button { justify-self: start; }
+}
+
+/* ============================================================
+   ABOUT HERO
+   story.css and styles.css both inject a "Laina Light Tours" string
+   through .about-hero::before, which duplicated the brand above the
+   eyebrow and pushed the headline down. The heading carries the
+   page on its own.
+   ============================================================ */
+
+.about-hero::before,
+.about-page .about-hero::before {
+  content: none !important;
+  display: none !important;
+}
+.about-hero::after,
+.about-page .about-hero::after { content: none !important; display: none !important; }
+
+.about-hero {
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: var(--s-3);
+  min-height: 480px;
+  padding: calc(var(--s-8) + 82px) clamp(24px,5vw,56px) var(--s-8) !important;
+}
+.about-hero > * { max-width: min(900px, 70%); }
+.about-hero h1 { margin: 0; font-size: clamp(38px, 6vw, 68px); }
+.about-hero .eyebrow { margin: 0; color: rgba(255,255,255,.9) !important; }
+
+@media (max-width: 820px) {
+  .about-hero { min-height: 380px; padding-top: calc(var(--s-7) + 70px) !important; }
+  .about-hero > * { max-width: 100%; }
+}
+
+/* The intro body is one column of prose, not two. */
+.about-intro__body {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: var(--s-4) !important;
+  columns: auto !important;
+}
+.about-intro__body p { max-width: 54ch; }

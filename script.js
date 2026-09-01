@@ -164,6 +164,30 @@ function renderPrice(a) {
 }
 
 
+
+/* Packages sit in the same selection store as activities so one
+   itinerary can hold both. Shape mirrors the activities rows:
+   [name, category, adult price, duration, blurb, image, child price] */
+const packages = [
+  ['Victoria Falls Explorer', 'Package', '$285', '5 hours',
+   'Airport transfers, guided Falls tour, Flight of Angels and a Zambezi Sunset Cruise.',
+   'hero-waterfall.webp', '$230'],
+  ['Victoria Falls Signature Mini', 'Package', '$465', '2 days / 1 night',
+   'A night of Boma drums, a guided Falls tour, helicopter flight and sunset on the Zambezi.',
+   'signature-mini.webp', '$233'],
+  ['Victoria Falls Signature Escape', 'Package', '$740', '3 days / 2 nights',
+   'Adds a safari to the essential Victoria Falls experience, with two nights accommodation.',
+   'signature-escape.webp', '$458'],
+  ['Ultimate Victoria Falls Adventure', 'Package', '$985', '4 days / 3 nights',
+   'Adds a full-day Chobe safari and your choice of rafting, Devil\u2019s Pool, gorge swing or zipline.',
+   'Meet%20the%20wild.jpg', '$580']
+];
+
+/* Anything selected anywhere on the site resolves through here. */
+function findItem(name) {
+  return activities.find(a => a[0] === name) || packages.find(a => a[0] === name) || null;
+}
+
 /* ── Per-activity schedule ────────────────────────────────────────
    Each selected experience can carry its own preferred date and
    time. Stored separately from the quantities so clearing one does
@@ -627,7 +651,7 @@ if (itineraryList) {
     itineraryList.innerHTML = names.length
       ? names.map((name, i) => {
           const qty = sels[name];
-          const a   = activities.find(x => x[0] === name);
+          const a   = findItem(name);
           const img = a ? a[5] : '';
           const sc  = sched[name] || {};
           return `<article class="selected-item" data-name="${name}">
@@ -757,3 +781,53 @@ if (itineraryList) {
 }
 
 updateItineraryNav();
+
+/* ── Package counters ─────────────────────────────────────────────
+   The same add/remove behaviour as the activity cards, on whichever
+   page a package card appears. */
+function wirePackageCounters() {
+  const cards = document.querySelectorAll('[data-package]');
+  if (!cards.length) return;
+  const sels = getSelections();
+
+  cards.forEach(card => {
+    const name = card.dataset.package;
+    const control = card.querySelector('.qty-control');
+    if (!control || control.dataset.wired) return;
+    control.dataset.wired = '1';
+
+    const valEl  = control.querySelector('.qty-val');
+    const decBtn = control.querySelector('.qty-dec');
+    const incBtn = control.querySelector('.qty-inc');
+    const qty0   = sels[name] || 0;
+    valEl.textContent = qty0;
+    decBtn.disabled = qty0 === 0;
+    control.classList.toggle('is-active', qty0 > 0);
+
+    incBtn.addEventListener('click', e => {
+      e.preventDefault(); e.stopPropagation();
+      const s2 = getSelections();
+      s2[name] = (s2[name] || 0) + 1;
+      setSelections(s2);
+      valEl.textContent = s2[name];
+      decBtn.disabled = false;
+      control.classList.add('is-active');
+    });
+
+    decBtn.addEventListener('click', e => {
+      e.preventDefault(); e.stopPropagation();
+      const s2 = getSelections();
+      s2[name] = Math.max(0, (s2[name] || 0) - 1);
+      if (s2[name] === 0) {
+        delete s2[name];
+        control.classList.remove('is-active');
+        decBtn.disabled = true;
+      }
+      setSelections(s2);
+      valEl.textContent = s2[name] || 0;
+    });
+  });
+}
+
+document.addEventListener('DOMContentLoaded', wirePackageCounters);
+
