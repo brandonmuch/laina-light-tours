@@ -291,7 +291,10 @@ document.querySelectorAll('.menu-toggle').forEach(btn =>
 /* ── Scrolled header ─────────────────────────────────────────────── */
 const siteHeader = document.querySelector('.site-header');
 if (siteHeader) {
-  const updateHeader = () => siteHeader.classList.toggle('scrolled', window.scrollY > 36);
+  const updateHeader = () => {
+    const isScrolled = window.scrollY > 36;
+    siteHeader.classList.toggle('scrolled', isScrolled);
+  };
   updateHeader();
   window.addEventListener('scroll', updateHeader, { passive: true });
 }
