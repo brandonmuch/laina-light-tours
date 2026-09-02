@@ -275,6 +275,17 @@ function adultPriceOf(name) {
 }
 function hasChildRate(name) { return childPriceOf(name) !== null; }
 
+/* The travellers named at the top of the form and the counts entered
+   against each experience can drift apart. The party is at least as
+   large as the biggest single booking, so report that. */
+function partyOf(kind, stated) {
+  const n = Math.max(0, parseInt(stated, 10) || 0);
+  const store = kind === 'child' ? getChildQty() : getSelections();
+  let most = 0;
+  Object.keys(store).forEach(k => { if (store[k] > most) most = store[k]; });
+  return Math.max(n, most);
+}
+
 function itineraryTotals() {
   const sels = getSelections(), kids = getChildQty();
   let adults = 0, children = 0, sum = 0;
@@ -981,7 +992,8 @@ if (itineraryList) {
       "Hello Laina Light Tours, here are my trip details.\n\n" +
       "Arrival: " + (arrival.value ? prettyDate(arrival.value) : 'to confirm') + "\n" +
       "Departure: " + (departure.value ? prettyDate(departure.value) : 'to confirm') + "\n" +
-      "Travellers: " + adultSel.value + " adult(s), " + childSel.value + " child(ren)" +
+      "Travellers: " + partyOf('adult', adultSel.value) + " adult(s), " +
+        partyOf('child', childSel.value) + " child(ren)" +
       transferBlock + "\n\n" +
       "Experiences (" + names.reduce((acc, n) => acc + sels[n], 0) + "):\n" + lines + "\n\n" +
       "Estimated total: " + money(itineraryTotals().total) + "\n\n" +
