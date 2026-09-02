@@ -5629,3 +5629,49 @@ input, select, textarea,
   .site-header .main-nav a[href*="#contact"] { order: 2; }
   .site-header .main-nav a[href="itinerary.html"] { order: 3; border-bottom: 0; }
 }
+
+/* ============================================================
+   PACKAGE CARD — adults and children, priced separately
+   The 2026 list gives every package an adult rate and a child
+   rate, so the card asks for both rather than a single head count.
+   ============================================================ */
+
+.pkg-people {
+  display: grid;
+  gap: 10px;
+  width: 100%;
+}
+.pkg-people-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  min-width: 0;
+}
+.pkg-people-label {
+  font-size: var(--t-sm);
+  font-weight: 600;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+.pkg-people .qty-control { flex: none; }
+
+/* The footer now holds price, both counters and the action, so it
+   stacks rather than crowding them onto one line. */
+.pkg-foot {
+  display: grid;
+  gap: var(--s-4);
+  align-items: start;
+}
+.pkg-foot .pkg-go { width: 100%; justify-content: center; }
+
+@media (min-width: 720px) {
+  .pkg-foot {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: var(--s-5);
+  }
+  .pkg-foot .price-block { grid-column: 1; }
+  .pkg-foot .pkg-people  { grid-column: 2; width: auto; justify-self: end; }
+  .pkg-foot .pkg-go      { grid-column: 1 / -1; }
+}

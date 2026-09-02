@@ -218,8 +218,17 @@ function prettyDate(iso) {
 }
 
 /* Total across quantities, used by every cart counter on the site. */
+/* A booking can be children only, so the itinerary is keyed by the
+   union of both stores rather than by the adult store alone. */
+function selectedNames() {
+  const seen = Object.keys(getSelections());
+  Object.keys(getChildQty()).forEach(n => { if (seen.indexOf(n) < 0) seen.push(n); });
+  return seen;
+}
+
 function selectionTotal() {
-  return Object.values(getSelections()).reduce((s, q) => s + q, 0);
+  const add = o => Object.values(o).reduce((s, q) => s + q, 0);
+  return add(getSelections()) + add(getChildQty());
 }
 
 
@@ -253,7 +262,11 @@ function getChildQty() {
   try { return JSON.parse(localStorage.getItem('lainaChildQty') || '{}'); }
   catch (e) { return {}; }
 }
-function setChildQty(obj) { localStorage.setItem('lainaChildQty', JSON.stringify(obj)); }
+function setChildQty(obj) {
+  localStorage.setItem('lainaChildQty', JSON.stringify(obj));
+  /* Children are travellers too, so the cart badge must follow. */
+  if (typeof updateItineraryNav === 'function') updateItineraryNav();
+}
 
 function priceValue(str) {
   if (!str) return 0;
@@ -289,7 +302,7 @@ function partyOf(kind, stated) {
 function itineraryTotals() {
   const sels = getSelections(), kids = getChildQty();
   let adults = 0, children = 0, sum = 0;
-  Object.keys(sels).forEach(n => {
+  selectedNames().forEach(n => {
     const qa = sels[n] || 0, qc = kids[n] || 0;
     adults += qa; children += qc;
     sum += adultPriceOf(n) * qa + (childPriceOf(n) || 0) * qc;
@@ -805,7 +818,7 @@ if (itineraryList) {
 
     const sels = getSelections(), kids = getChildQty();
     const rows = [];
-    Object.keys(sels).forEach(n => {
+    selectedNames().forEach(n => {
       const qa = sels[n] || 0, qc = kids[n] || 0;
       const pa = adultPriceOf(n), pc = childPriceOf(n);
       const line = pa * qa + (pc || 0) * qc;
@@ -830,7 +843,7 @@ if (itineraryList) {
   const draw = () => {
     const sels  = getSelections();
     const sched = getSchedule();
-    const names = Object.keys(sels);
+    const names = selectedNames();
     const total = names.reduce((s, n) => s + sels[n], 0);
     const countEl = document.querySelector('#selection-count');
     if (countEl) countEl.textContent = total;
@@ -845,7 +858,7 @@ if (itineraryList) {
 
     itineraryList.innerHTML = names.length
       ? names.map((name, i) => {
-          const qty = sels[name];
+          const qty = sels[name] || 0;
           const a   = findItem(name);
           const img = a ? a[5] : '';
           const sc  = sched[name] || {};
@@ -865,7 +878,7 @@ if (itineraryList) {
               <small>${a ? a[3] : ''}${a && a[3] ? ' · ' : ''}${a ? a[2] : ''}</small>
               ${hasChildRate(name) ? `<div class="selected-people">
                 <label><span>Adults</span>
-                  <input type="number" min="1" max="999" step="1" value="${qty}" data-people="adult" data-for="${name}"></label>
+                  <input type="number" min="0" max="999" step="1" value="${qty}" data-people="adult" data-for="${name}"></label>
                 <label><span>Children</span>
                   <input type="number" min="0" max="999" step="1" value="${getChildQty()[name] || 0}" data-people="child" data-for="${name}"></label>
               </div>` : ''}
@@ -933,8 +946,8 @@ if (itineraryList) {
         const p2 = document.querySelector('#schedule-progress');
         if (p2) {
           const sc3 = getSchedule();
-          const done = Object.keys(getSelections()).filter(n => sc3[n] && sc3[n].date).length;
-          p2.textContent = `${done} of ${Object.keys(getSelections()).length} scheduled`;
+          const done = selectedNames().filter(n => sc3[n] && sc3[n].date).length;
+          p2.textContent = `${done} of ${selectedNames().length} scheduled`;
         }
       })
     );
@@ -955,13 +968,13 @@ if (itineraryList) {
 
     const sels  = getSelections();
     const sched = getSchedule();
-    const names = Object.keys(sels);
+    const names = selectedNames();
 
     /* One line per experience, with its own date and time, so the
        message reads as a schedule rather than a list of names. */
     const lines = names.length
       ? names.map((name, i) => {
-          const qty = sels[name];
+          const qty = sels[name] || 0;
           const sc  = sched[name] || {};
           const when = [sc.date ? prettyDate(sc.date) : null, sc.time || null]
             .filter(Boolean).join(', ');
@@ -996,7 +1009,7 @@ if (itineraryList) {
       "Travellers: " + partyOf('adult', adultSel.value) + " adult(s), " +
         partyOf('child', childSel.value) + " child(ren)" +
       transferBlock + "\n\n" +
-      "Experiences (" + names.reduce((acc, n) => acc + sels[n], 0) + "):\n" + lines + "\n\n" +
+      "Experiences (" + names.length + "):\n" + lines + "\n\n" +
       "Estimated total: " + money(itineraryTotals().total) + "\n\n" +
       "Please confirm availability and the final quote.";
 
@@ -1017,46 +1030,56 @@ updateItineraryNav();
 /* ── Package counters ─────────────────────────────────────────────
    The same add/remove behaviour as the activity cards, on whichever
    page a package card appears. */
+/* A package is priced per adult and per child, so the card carries a
+   counter for each. Adults live in the selection store, children in
+   the child store, and both are keyed by the package name. */
+function storeFor(who) {
+  return who === 'child'
+    ? { get: getChildQty, set: setChildQty }
+    : { get: getSelections, set: setSelections };
+}
+
 function wirePackageCounters() {
   const cards = document.querySelectorAll('[data-package]');
   if (!cards.length) return;
-  const sels = getSelections();
 
   cards.forEach(card => {
     const name = card.dataset.package;
-    const control = card.querySelector('.qty-control');
-    if (!control || control.dataset.wired) return;
-    control.dataset.wired = '1';
 
-    const valEl  = control.querySelector('.qty-val');
-    const decBtn = control.querySelector('.qty-dec');
-    const incBtn = control.querySelector('.qty-inc');
-    const qty0   = sels[name] || 0;
-    if ('value' in valEl) valEl.value = qty0; else valEl.textContent = qty0;
-    decBtn.disabled = qty0 === 0;
-    control.classList.toggle('is-active', qty0 > 0);
+    card.querySelectorAll('.qty-control[data-name]').forEach(control => {
+      if (control.dataset.wired) return;
+      control.dataset.wired = '1';
 
-    incBtn.addEventListener('click', e => {
-      e.preventDefault(); e.stopPropagation();
-      const s2 = getSelections();
-      s2[name] = (s2[name] || 0) + 1;
-      setSelections(s2);
-      valEl.value = s2[name];
-      decBtn.disabled = false;
-      control.classList.add('is-active');
-    });
+      const who    = control.dataset.who || 'adult';
+      const store  = storeFor(who);
+      const valEl  = control.querySelector('.qty-val');
+      const decBtn = control.querySelector('.qty-dec');
+      const incBtn = control.querySelector('.qty-inc');
 
-    decBtn.addEventListener('click', e => {
-      e.preventDefault(); e.stopPropagation();
-      const s2 = getSelections();
-      s2[name] = Math.max(0, (s2[name] || 0) - 1);
-      if (s2[name] === 0) {
-        delete s2[name];
-        control.classList.remove('is-active');
-        decBtn.disabled = true;
-      }
-      setSelections(s2);
-      valEl.value = s2[name] || 0;
+      const paint = n => {
+        valEl.value = n;
+        decBtn.disabled = n === 0;
+        control.classList.toggle('is-active', n > 0);
+      };
+
+      const write = n => {
+        const s2 = store.get();
+        if (n === 0) { delete s2[name]; } else { s2[name] = n; }
+        store.set(s2);
+        paint(n);
+      };
+
+      paint(store.get()[name] || 0);
+
+      incBtn.addEventListener('click', e => {
+        e.preventDefault(); e.stopPropagation();
+        write((store.get()[name] || 0) + 1);
+      });
+
+      decBtn.addEventListener('click', e => {
+        e.preventDefault(); e.stopPropagation();
+        write(Math.max(0, (store.get()[name] || 0) - 1));
+      });
     });
   });
 }
@@ -1077,9 +1100,10 @@ document.addEventListener('change', e => {
                (control.closest('[data-name]') || {}).dataset?.name;
   if (!name) return;
   const n = Math.max(0, Math.min(999, parseInt(input.value, 10) || 0));
-  const sels = getSelections();
+  const store = storeFor(control.dataset.who || 'adult');
+  const sels = store.get();
   if (n === 0) { delete sels[name]; } else { sels[name] = n; }
-  setSelections(sels);
+  store.set(sels);
   input.value = n;
   control.classList.toggle('is-active', n > 0);
   const dec = control.querySelector('.qty-dec');
