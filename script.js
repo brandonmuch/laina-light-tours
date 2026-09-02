@@ -821,8 +821,9 @@ if (itineraryList) {
       rows.push(`<div class="total-line"><dt>Airport transfer<small>${legs} leg${legs > 1 ? 's' : ''} at $35 per vehicle</small></dt><dd>${money(t.transfer)}</dd></div>`);
     }
 
-    host.innerHTML = rows.length ? rows.join('') :
-      '<div class="total-empty">Nothing selected yet.</div>';
+    host.innerHTML = rows.join('');
+    const empty = document.querySelector('#total-empty');
+    if (empty) empty.hidden = rows.length > 0;
     grand.textContent = money(t.total);
   }
 

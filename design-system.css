@@ -3094,21 +3094,14 @@ h2 { max-width: 24ch; }
 }
 .pick-dur .icon { font-size: 13px; }
 
-/* The action is a link, not a block. */
+/* The action reads as a button, because it is one. */
 .pick-cta {
-  width: auto;
-  align-self: flex-start;
-  justify-content: flex-start;
-  padding: 0;
-  background: none !important;
-  color: var(--petrol) !important;
-  font-size: var(--t-sm);
-  font-weight: 600;
-  border-radius: 0;
-  box-shadow: none !important;
-  gap: 6px;
+  width: 100%;
+  align-self: stretch;
+  justify-content: center;
+  gap: 8px;
 }
-.pick-cta:hover { background: none !important; color: var(--petrol-deep) !important; text-decoration: underline; }
+.pick-cta:hover { text-decoration: none; }
 .pick-cta .icon { stroke: currentColor !important; font-size: 15px; }
 
 .pick-media { aspect-ratio: 16 / 10; }
@@ -5566,4 +5559,73 @@ body.modal-open { overflow: hidden; }
   width: 100% !important;
   max-width: none !important;
   margin-inline: 0 !important;
+}
+
+/* ============================================================
+   iOS FORM CONTROLS — date and time fields must be able to shrink
+   Safari on iOS gives input[type=date] and [type=time] an intrinsic
+   minimum width from their own content and will not let it shrink,
+   so the field bursts out of the card it sits in. Chromium does not
+   reproduce this, which is why it survived several desktop sweeps.
+   Turning off the native appearance and clearing the minimum lets
+   the field obey its container.
+   ============================================================ */
+
+input, select, textarea { min-width: 0; max-width: 100%; box-sizing: border-box; }
+
+input[type="date"],
+input[type="time"],
+input[type="number"],
+input[type="datetime-local"] {
+  -webkit-appearance: none;
+  appearance: none;
+  min-width: 0;
+  width: 100%;
+  /* Below 16px iOS zooms the whole page on focus. */
+  font-size: max(16px, var(--t-sm));
+}
+
+/* The inner value box carries its own width on iOS as well. */
+input::-webkit-date-and-time-value {
+  min-width: 0;
+  width: 100%;
+  text-align: left;
+  margin: 0;
+}
+input::-webkit-datetime-edit { padding: 0; }
+input::-webkit-calendar-picker-indicator { margin-inline-start: auto; flex: none; }
+
+/* Never let a control paint outside the panel that holds it. */
+.itinerary-panel, .selected-item, .booking-form, .transfer-panel { overflow: hidden; }
+.itinerary-form label, .selected-item label { min-width: 0; }
+
+/* ============================================================
+   Form text is typed, not printed over a photograph, so it must
+   not inherit the legibility shadow the cards use.
+   ============================================================ */
+input, select, textarea,
+.qty-control input.qty-val,
+.activity-card input, .activity-card select {
+  text-shadow: none !important;
+}
+
+/* ============================================================
+   TRANSFERS HERO PRICE — hold the gutter below desktop
+   ============================================================ */
+@media (max-width: 980px) {
+  .transfer-price {
+    padding-inline: var(--gutter) !important;
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+/* ============================================================
+   NAV ORDER — the itinerary is the end of the journey, so it sits
+   last in the stacked menu.
+   ============================================================ */
+@media (max-width: 980px) {
+  .site-header .main-nav a { order: 1; }
+  .site-header .main-nav a[href*="#contact"] { order: 2; }
+  .site-header .main-nav a[href="itinerary.html"] { order: 3; border-bottom: 0; }
 }
