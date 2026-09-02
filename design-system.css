@@ -5428,3 +5428,142 @@ input[type="checkbox"], input[type="radio"] {
 @media (prefers-reduced-motion: reduce) {
   [data-reveal] { transform: none !important; transition: none !important; }
 }
+
+/* ============================================================
+   TYPEABLE COUNTERS
+   ============================================================ */
+
+.qty-control input.qty-val {
+  width: 46px;
+  min-width: 46px;
+  height: 30px;
+  padding: 0 2px;
+  text-align: center;
+  border: 0;
+  border-radius: var(--r-xs);
+  background: rgba(255,255,255,.9);
+  color: var(--charcoal);
+  font-size: var(--t-sm);
+  font-weight: 700;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+.qty-control input.qty-val::-webkit-outer-spin-button,
+.qty-control input.qty-val::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.qty-control input.qty-val:focus { outline: 2px solid var(--amber); outline-offset: 1px; }
+
+.pkg-card .qty-control input.qty-val { background: var(--surface); color: var(--ink); }
+
+@media (max-width: 560px) {
+  .qty-control input.qty-val { flex: 1; width: auto; min-width: 0; height: 36px; font-size: var(--t-base); }
+}
+
+/* ============================================================
+   PACKAGE CHOICES
+   ============================================================ */
+
+.pkg-choices { display: grid; gap: var(--s-4); margin-top: var(--s-3); }
+
+.choice-group { border: 0; margin: 0; padding: 0; }
+.choice-group legend {
+  display: flex; align-items: baseline; gap: 8px;
+  padding: 0 0 8px;
+  font-size: var(--t-sm); font-weight: 600; color: var(--ink);
+}
+.choice-count { font-size: var(--t-micro); font-weight: 500; color: var(--ink-3); }
+.choice-group.is-full .choice-count { color: var(--petrol); font-weight: 700; }
+
+.choice-options { display: flex; flex-wrap: wrap; gap: 8px; }
+.choice-chip { position: relative; cursor: pointer; }
+.choice-chip input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.choice-chip span {
+  display: inline-block;
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  background: var(--surface);
+  font-size: var(--t-sm);
+  color: var(--ink-2);
+  transition: all var(--dur-fast) var(--ease-out);
+}
+.choice-chip input:checked + span {
+  background: var(--petrol); border-color: var(--petrol); color: #fff; font-weight: 600;
+}
+.choice-chip input:disabled + span { opacity: .45; cursor: not-allowed; }
+.choice-chip input:focus-visible + span { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+.choice-note { margin: 8px 0 0; font-size: var(--t-micro); color: var(--petrol); font-weight: 600; }
+.choice-note:empty { display: none; }
+
+/* ============================================================
+   ITINERARY TOTAL
+   ============================================================ */
+
+.total-lines { margin: 0; display: grid; gap: var(--s-3); }
+.total-line {
+  display: flex; align-items: baseline; justify-content: space-between; gap: var(--s-4);
+  padding-bottom: var(--s-3);
+  border-bottom: 1px solid var(--line-soft);
+}
+.total-line dt { margin: 0; font-size: var(--t-base); font-weight: 600; color: var(--ink); min-width: 0; }
+.total-line dt small { display: block; font-size: var(--t-sm); font-weight: 400; color: var(--ink-3); margin-top: 2px; }
+.total-line dd { margin: 0; font-size: var(--t-md); font-weight: 700; color: var(--ink); white-space: nowrap; }
+.total-empty { margin: 0; color: var(--ink-3); font-size: var(--t-sm); }
+
+.total-grand {
+  display: flex; align-items: baseline; justify-content: space-between; gap: var(--s-4);
+  margin-top: var(--s-4); padding-top: var(--s-4);
+  border-top: 2px solid var(--ink);
+}
+.total-grand span { font-size: var(--t-md); font-weight: 600; }
+.total-grand strong { font-size: clamp(28px, 3vw, 38px); font-weight: 700; letter-spacing: -.02em; }
+.total-note { margin-top: var(--s-3); font-size: var(--t-sm); color: var(--ink-3); }
+
+.selected-people { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-3); }
+@media (max-width: 620px) { .selected-people { grid-template-columns: 1fr; } }
+
+/* ── Modal scroll lock ────────────────────────────────────────────
+   The page behind a dialog should not scroll away under it. */
+body.modal-open { overflow: hidden; }
+
+/* ── Itinerary: two-column checkout ───────────────────────────────
+   Legacy CSS capped the form at 850px and left-aligned it, which
+   left a wide void on the right at desktop. The running total and
+   the send panel move into a rail that stays in view while the
+   traveller fills the form, the way a checkout summary should. */
+.itinerary-form { max-width: none !important; }
+.itinerary-rail { display: grid; gap: var(--s-5); align-content: start; }
+.itinerary-col  { display: grid; gap: var(--s-5); align-content: start; min-width: 0; }
+
+@media (min-width: 1000px) {
+  .itinerary-form {
+    grid-template-columns: minmax(0, 1fr) clamp(320px, 30vw, 400px);
+    align-items: start;
+    column-gap: var(--s-5);
+  }
+  .itinerary-col  { grid-column: 1; }
+  .itinerary-rail {
+    grid-column: 2;
+    position: sticky;
+    top: calc(var(--header-h, 72px) + 20px);
+  }
+  /* The rail is narrower, so its total reads tighter. */
+  .itinerary-rail .itinerary-total .total-grand strong { font-size: 30px; }
+  .itinerary-rail .itinerary-submit { display: block; }
+  .itinerary-rail .itinerary-submit .button { width: 100%; margin-top: var(--s-4); }
+}
+
+/* Below that the rail is simply the last two blocks in the stack. */
+@media (max-width: 999px) {
+  .itinerary-rail { grid-column: 1; }
+}
+
+/* The sitewide gutter rule insets a panel from the viewport. Inside
+   the itinerary grid the track already carries that gutter, so the
+   panels fill their track instead of insetting twice. */
+.itinerary-col > .itinerary-panel,
+.itinerary-rail > .itinerary-panel {
+  width: 100% !important;
+  max-width: none !important;
+  margin-inline: 0 !important;
+}

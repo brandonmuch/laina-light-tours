@@ -222,6 +222,76 @@ function selectionTotal() {
   return Object.values(getSelections()).reduce((s, q) => s + q, 0);
 }
 
+
+/* ── Package choices ──────────────────────────────────────────────
+   Two packages in the 2026 list let the traveller pick from a set:
+   the Signature Escape chooses one safari, the Ultimate chooses one
+   adrenaline activity. `max` is data rather than hard-coded, so a
+   package that later allows three works without a code change. */
+const packageChoices = {
+  'Victoria Falls Signature Escape': [
+    { label: 'Safari', max: 1,
+      options: ['Full-day Chobe National Park', 'Zambezi National Park game drive'] }
+  ],
+  'Ultimate Victoria Falls Adventure': [
+    { label: 'Adrenaline activity', max: 1,
+      options: ['White-water rafting', "Devil's Pool", 'Gorge swing', 'Zipline'] }
+  ]
+};
+
+function getChoices() {
+  try { return JSON.parse(localStorage.getItem('lainaChoices') || '{}'); }
+  catch (e) { return {}; }
+}
+function setChoices(obj) { localStorage.setItem('lainaChoices', JSON.stringify(obj)); }
+
+/* ── Child quantities and totals ──────────────────────────────────
+   Selections hold the adult count; anything with its own child rate
+   keeps a child count alongside, so two adults and three children
+   are priced as that rather than as five adults. */
+function getChildQty() {
+  try { return JSON.parse(localStorage.getItem('lainaChildQty') || '{}'); }
+  catch (e) { return {}; }
+}
+function setChildQty(obj) { localStorage.setItem('lainaChildQty', JSON.stringify(obj)); }
+
+function priceValue(str) {
+  if (!str) return 0;
+  const m = String(str).match(/\$\s*([\d,]+)/);
+  return m ? parseFloat(m[1].replace(/,/g, '')) : 0;
+}
+function childPriceOf(name) {
+  const c = typeof childPricing !== 'undefined' ? childPricing[name] : null;
+  if (c && c.child) return priceValue(c.child);
+  const pk = packages.find(x => x[0] === name);
+  if (pk && pk[6]) return priceValue(pk[6]);
+  return null;
+}
+function adultPriceOf(name) {
+  const c = typeof childPricing !== 'undefined' ? childPricing[name] : null;
+  if (c && c.adult) return priceValue(c.adult);
+  const item = findItem(name);
+  return item ? priceValue(item[2]) : 0;
+}
+function hasChildRate(name) { return childPriceOf(name) !== null; }
+
+function itineraryTotals() {
+  const sels = getSelections(), kids = getChildQty();
+  let adults = 0, children = 0, sum = 0;
+  Object.keys(sels).forEach(n => {
+    const qa = sels[n] || 0, qc = kids[n] || 0;
+    adults += qa; children += qc;
+    sum += adultPriceOf(n) * qa + (childPriceOf(n) || 0) * qc;
+  });
+  let transfer = 0;
+  try {
+    const t = JSON.parse(localStorage.getItem('lainaTransfer') || '{}');
+    transfer = ((t.arrival ? 1 : 0) + (t.departure ? 1 : 0)) * 35;
+  } catch (e) {}
+  return { adults, children, experiences: sum, transfer, total: sum + transfer };
+}
+function money(n) { return '$' + Math.round(n).toLocaleString('en-US'); }
+
 /* ── Quantity-based localStorage helpers ─────────────────────────── */
 function getSelections() {
   try {
@@ -307,7 +377,7 @@ function activityCard(a, sels, i) {
           <span class="activity-duration">${a[3]}</span>
           <div class="qty-control${activeClass}" data-name="${a[0]}">
             <button class="qty-btn qty-dec" aria-label="Remove one ${a[0]}" ${qty === 0 ? 'disabled' : ''}>\u2212</button>
-            <span class="qty-val">${qty}</span>
+            <input class="qty-val" type="number" inputmode="numeric" min="0" max="999" step="1" value="${qty}" aria-label="Quantity for ${a[0]}">
             <button class="qty-btn qty-inc" aria-label="Add ${a[0]} to itinerary">+</button>
           </div>
         </div>
@@ -379,7 +449,7 @@ function renderActivities() {
       const s2 = getSelections();
       s2[name] = (s2[name] || 0) + 1;
       setSelections(s2);
-      valEl.textContent = s2[name];
+      valEl.value = s2[name];
       decBtn.disabled = false;
       control.classList.add('is-active');
     });
@@ -394,15 +464,18 @@ function renderActivities() {
         decBtn.disabled = true;
       }
       setSelections(s2);
-      valEl.textContent = s2[name] || 0;
+      valEl.value = s2[name] || 0;
     });
   });
 }
 
 /* ── Modal ───────────────────────────────────────────────────────── */
 function openModal(a) {
-  const modal = document.querySelector('#activity-modal');
-  if (!modal || !a) return;
+  if (!a) return;
+  const modal = ensureModal();
+  if (!modal) return;
+  modal.dataset.returnTo = '';
+  lastFocus = document.activeElement;
   document.querySelector('#modal-image').src = a[5];
   document.querySelector('#modal-image').alt = a[0];
   document.querySelector('#modal-category').textContent = a[1];
@@ -426,24 +499,74 @@ function openModal(a) {
 
   modal.classList.add('open');
   modal.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('modal-open');
+  const close = modal.querySelector('.modal-close');
+  if (close) close.focus();
 }
+
+let lastFocus = null;
 
 function closeModal() {
   const modal = document.querySelector('#activity-modal');
-  if (modal) { modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true'); }
+  if (!modal) return;
+  modal.classList.remove('open');
+  modal.setAttribute('aria-hidden', 'true');
+  document.body.classList.remove('modal-open');
+  if (lastFocus && lastFocus.focus) lastFocus.focus();
 }
+
+/* The detail dialog is built here rather than repeated in every
+   page's markup, so any page that renders the grid gets it. */
+function ensureModal() {
+  let modal = document.querySelector('#activity-modal');
+  if (modal) return modal;
+
+  modal = document.createElement('div');
+  modal.className = 'modal';
+  modal.id = 'activity-modal';
+  modal.setAttribute('role', 'dialog');
+  modal.setAttribute('aria-modal', 'true');
+  modal.setAttribute('aria-labelledby', 'modal-title');
+  modal.setAttribute('aria-hidden', 'true');
+  modal.innerHTML =
+    '<div class="modal-card">' +
+      '<button type="button" class="modal-close" aria-label="Close">' +
+        '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+             'stroke-width="2" stroke-linecap="round" aria-hidden="true">' +
+          '<path d="M18 6 6 18M6 6l12 12"/></svg>' +
+      '</button>' +
+      '<img id="modal-image" alt="">' +
+      '<p class="eyebrow" id="modal-category"></p>' +
+      '<h2 id="modal-title"></h2>' +
+      '<p id="modal-description"></p>' +
+      '<div class="modal-meta"><strong id="modal-price"></strong>' +
+        '<span id="modal-duration"></span></div>' +
+      '<button type="button" class="button" id="add-itinerary">Add to itinerary +</button>' +
+    '</div>';
+  document.body.appendChild(modal);
+
+  modal.querySelector('.modal-close').addEventListener('click', closeModal);
+  modal.addEventListener('click', e => {
+    if (e.target === modal) closeModal();
+  });
+  return modal;
+}
+
+/* Escape closes it, as a dialog should. */
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  const modal = document.querySelector('#activity-modal.open');
+  if (modal) closeModal();
+});
 
 /* ── Init activity grid ──────────────────────────────────────────── */
 if (grid) {
   const params = new URLSearchParams(location.search);
-  if (params.get('category')) category.value = params.get('category');
+  if (category && params.get('category')) category.value = params.get('category');
   renderActivities();
-  search.addEventListener('input', renderActivities);
-  category.addEventListener('change', renderActivities);
-  document.querySelector('.modal-close').addEventListener('click', closeModal);
-  document.querySelector('#activity-modal').addEventListener('click', e => {
-    if (e.target.id === 'activity-modal') closeModal();
-  });
+  if (search) search.addEventListener('input', renderActivities);
+  if (category) category.addEventListener('change', renderActivities);
+  ensureModal();
 }
 
 /* ── Booking form ────────────────────────────────────────────────── */
@@ -646,6 +769,7 @@ if (itineraryList) {
     };
     localStorage.setItem('lainaTransfer', JSON.stringify(t));
     drawTransferTotal(t);
+    if (typeof drawTotals === 'function') drawTotals();
   }
 
   if (tArrival) {
@@ -659,6 +783,36 @@ if (itineraryList) {
       el.addEventListener('change', saveTransfer);
     });
     tFlight.addEventListener('input', saveTransfer);
+  }
+
+
+  /* Running total, redrawn whenever anything that feeds it changes. */
+  function drawTotals() {
+    const host = document.querySelector('#total-lines');
+    const grand = document.querySelector('#total-grand');
+    if (!host || !grand) return;
+
+    const sels = getSelections(), kids = getChildQty();
+    const rows = [];
+    Object.keys(sels).forEach(n => {
+      const qa = sels[n] || 0, qc = kids[n] || 0;
+      const pa = adultPriceOf(n), pc = childPriceOf(n);
+      const line = pa * qa + (pc || 0) * qc;
+      const detail = pc !== null
+        ? `${qa} adult${qa === 1 ? '' : 's'} at ${money(pa)}` + (qc ? `, ${qc} child${qc === 1 ? '' : 'ren'} at ${money(pc)}` : '')
+        : `${qa} x ${money(pa)}`;
+      rows.push(`<div class="total-line"><dt>${n}<small>${detail}</small></dt><dd>${money(line)}</dd></div>`);
+    });
+
+    const t = itineraryTotals();
+    if (t.transfer) {
+      const legs = t.transfer / 35;
+      rows.push(`<div class="total-line"><dt>Airport transfer<small>${legs} leg${legs > 1 ? 's' : ''} at $35 per vehicle</small></dt><dd>${money(t.transfer)}</dd></div>`);
+    }
+
+    host.innerHTML = rows.length ? rows.join('') :
+      '<div class="total-empty">Nothing selected yet.</div>';
+    grand.textContent = money(t.total);
   }
 
   const draw = () => {
@@ -697,6 +851,12 @@ if (itineraryList) {
                 </button>
               </div>
               <small>${a ? a[3] : ''}${a && a[3] ? ' · ' : ''}${a ? a[2] : ''}</small>
+              ${hasChildRate(name) ? `<div class="selected-people">
+                <label><span>Adults</span>
+                  <input type="number" min="1" max="999" step="1" value="${qty}" data-people="adult" data-for="${name}"></label>
+                <label><span>Children</span>
+                  <input type="number" min="0" max="999" step="1" value="${getChildQty()[name] || 0}" data-people="child" data-for="${name}"></label>
+              </div>` : ''}
               <div class="selected-when">
                 <label>
                   <span>Preferred date</span>
@@ -736,6 +896,25 @@ if (itineraryList) {
       })
     );
 
+    itineraryList.querySelectorAll('[data-people]').forEach(input =>
+      input.addEventListener('change', () => {
+        const nm = input.dataset.for;
+        const n = Math.max(0, Math.min(999, parseInt(input.value, 10) || 0));
+        if (input.dataset.people === 'adult') {
+          const s2 = getSelections();
+          if (n === 0) { delete s2[nm]; } else { s2[nm] = n; }
+          setSelections(s2);
+        } else {
+          const k = getChildQty();
+          if (n === 0) { delete k[nm]; } else { k[nm] = n; }
+          setChildQty(k);
+        }
+        input.value = n;
+        drawTotals();
+        draw();
+      })
+    );
+
     itineraryList.querySelectorAll('[data-sched]').forEach(input =>
       input.addEventListener('change', () => {
         setActivitySchedule(input.dataset.for, input.dataset.sched, input.value);
@@ -749,6 +928,7 @@ if (itineraryList) {
     );
 
     applyDateBounds();
+    drawTotals();
     if (window.applySquircles) window.applySquircles();
   };
 
@@ -773,7 +953,16 @@ if (itineraryList) {
           const sc  = sched[name] || {};
           const when = [sc.date ? prettyDate(sc.date) : null, sc.time || null]
             .filter(Boolean).join(', ');
-          return `${i + 1}. ${name}${qty > 1 ? ` x${qty}` : ''}${when ? ` — ${when}` : ' — date to confirm'}`;
+          const kid = getChildQty()[name] || 0;
+          const who = hasChildRate(name)
+            ? ` (${qty} adult${qty === 1 ? '' : 's'}${kid ? `, ${kid} child${kid === 1 ? '' : 'ren'}` : ''})`
+            : (qty > 1 ? ` x${qty}` : '');
+          const ch = getChoices();
+          const picks = Object.keys(ch).filter(k => k.indexOf(name + '::') === 0)
+                          .map(k => ch[k].join(', ')).join('; ');
+          return `${i + 1}. ${name}${who}${when ? ` — ${when}` : ' — date to confirm'}` +
+                 (picks ? `
+   Choice: ${picks}` : '');
         }).join('\n')
       : 'I need help choosing activities.';
 
@@ -795,6 +984,7 @@ if (itineraryList) {
       "Travellers: " + adultSel.value + " adult(s), " + childSel.value + " child(ren)" +
       transferBlock + "\n\n" +
       "Experiences (" + names.reduce((acc, n) => acc + sels[n], 0) + "):\n" + lines + "\n\n" +
+      "Estimated total: " + money(itineraryTotals().total) + "\n\n" +
       "Please confirm availability and the final quote.";
 
     window.open(waLink(message), '_blank');
@@ -829,7 +1019,7 @@ function wirePackageCounters() {
     const decBtn = control.querySelector('.qty-dec');
     const incBtn = control.querySelector('.qty-inc');
     const qty0   = sels[name] || 0;
-    valEl.textContent = qty0;
+    if ('value' in valEl) valEl.value = qty0; else valEl.textContent = qty0;
     decBtn.disabled = qty0 === 0;
     control.classList.toggle('is-active', qty0 > 0);
 
@@ -838,7 +1028,7 @@ function wirePackageCounters() {
       const s2 = getSelections();
       s2[name] = (s2[name] || 0) + 1;
       setSelections(s2);
-      valEl.textContent = s2[name];
+      valEl.value = s2[name];
       decBtn.disabled = false;
       control.classList.add('is-active');
     });
@@ -853,10 +1043,95 @@ function wirePackageCounters() {
         decBtn.disabled = true;
       }
       setSelections(s2);
-      valEl.textContent = s2[name] || 0;
+      valEl.value = s2[name] || 0;
     });
   });
 }
 
 document.addEventListener('DOMContentLoaded', wirePackageCounters);
+
+/* ── qty-val typing ───────────────────────────────────────────────
+   A counter is fine for one or two, useless for a group of a
+   hundred. Delegated so it covers every counter on the page,
+   including cards rendered after load. */
+document.addEventListener('change', e => {
+  const input = e.target.closest && e.target.closest('input.qty-val');
+  if (!input) return;
+  const control = input.closest('.qty-control');
+  if (!control) return;
+  const name = control.dataset.name ||
+               (control.closest('[data-package]') || {}).dataset?.package ||
+               (control.closest('[data-name]') || {}).dataset?.name;
+  if (!name) return;
+  const n = Math.max(0, Math.min(999, parseInt(input.value, 10) || 0));
+  const sels = getSelections();
+  if (n === 0) { delete sels[name]; } else { sels[name] = n; }
+  setSelections(sels);
+  input.value = n;
+  control.classList.toggle('is-active', n > 0);
+  const dec = control.querySelector('.qty-dec');
+  if (dec) dec.disabled = n === 0;
+});
+
+/* Clicking the field must not open the card's modal. */
+document.addEventListener('click', e => {
+  if (e.target.closest && e.target.closest('input.qty-val')) e.stopPropagation();
+}, true);
+
+/* Renders the choice groups under a package card and enforces the
+   maximum, telling the traveller when they have reached it rather
+   than silently refusing the click. */
+function renderPackageChoices() {
+  document.querySelectorAll('[data-package]').forEach(card => {
+    const name = card.dataset.package;
+    const groups = packageChoices[name];
+    const host = card.querySelector('.pkg-choices');
+    if (!groups || !host || host.dataset.built) return;
+    host.dataset.built = '1';
+
+    const saved = getChoices();
+    host.innerHTML = groups.map((g, gi) => `
+      <fieldset class="choice-group" data-group="${gi}" data-max="${g.max}">
+        <legend>${g.label} <span class="choice-count">0 of ${g.max}</span></legend>
+        <div class="choice-options">
+          ${g.options.map(o => `
+            <label class="choice-chip">
+              <input type="checkbox" value="${o}">
+              <span>${o}</span>
+            </label>`).join('')}
+        </div>
+        <p class="choice-note" role="status" aria-live="polite"></p>
+      </fieldset>`).join('');
+
+    host.querySelectorAll('.choice-group').forEach((gEl, gi) => {
+      const max = parseInt(gEl.dataset.max, 10);
+      const note = gEl.querySelector('.choice-note');
+      const count = gEl.querySelector('.choice-count');
+      const boxes = [...gEl.querySelectorAll('input[type=checkbox]')];
+
+      const key = name + '::' + gi;
+      (saved[key] || []).forEach(v => {
+        const box = boxes.find(b => b.value === v);
+        if (box) box.checked = true;
+      });
+
+      const sync = () => {
+        const chosen = boxes.filter(b => b.checked).map(b => b.value);
+        count.textContent = `${chosen.length} of ${max}`;
+        gEl.classList.toggle('is-full', chosen.length >= max);
+        boxes.forEach(b => { b.disabled = !b.checked && chosen.length >= max; });
+        note.textContent = chosen.length >= max
+          ? `That is the maximum for this package. Clear one to change your choice.`
+          : '';
+        const all = getChoices();
+        if (chosen.length) { all[key] = chosen; } else { delete all[key]; }
+        setChoices(all);
+      };
+
+      boxes.forEach(b => b.addEventListener('change', sync));
+      sync();
+    });
+  });
+}
+document.addEventListener('DOMContentLoaded', renderPackageChoices);
 
